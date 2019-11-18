@@ -1,0 +1,34 @@
+---
+title: "Cleaning da data"
+author: "Julian McClellan"
+date: "11/18/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(data.table)
+library(magrittr) # Let's me use pipes (%>%)
+library(lubridate)
+data.cs <- read.csv("data/cleansample.csv") %>% as.data.table() 
+data.pb <- read.csv("data/pricebeliefs.csv") %>% as.data.table()
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r clean}
+# Remove blank emails from clean sample
+data.cs <- data.cs[email != ""]
+```
+
+```{r groups}
+# Basic grouping
+
+## Clean sample
+data.cs.unique_obs <- data.cs[, .(count = .N), by = c("email", "fall12dum", "spring13dum", "crsesec")]
+data.cs.season_obs <- data.cs[, .(count = .N), by = c("email", "fall12dum", "spring13dum")]
+data.cs.isbn_class <- data.cs[, .(count = .N), by = c("isbn", "crsesec")][
+  order(crsesec)
+]
+
+## Personal beliefs
+data.pb.unique_obs <- 
+```
