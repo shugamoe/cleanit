@@ -9,26 +9,91 @@ output: html_document
 library(data.table)
 library(magrittr) # Let's me use pipes (%>%)
 library(lubridate)
-data.cs <- read.csv("data/cleansample.csv") %>% as.data.table() 
+data.cs <- read.csv("data/cleansample.csv") %>% as.data.table()
 data.pb <- read.csv("data/pricebeliefs.csv") %>% as.data.table()
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r clean}
+# ID both datasets
+data.cs[,cs.id := .I]
+data.pb[,pb.id := .I]
+
 # Remove blank emails from clean sample
+nrow(data.cs)
 data.cs <- data.cs[email != ""]
+nrow(data.cs) 
+
+# Put month and year into PB create a "period" column (fall12 or spring13)
+pb.date <- "%m/%d/%Y %H:%M"
+data.pb[, ':=' (startdate = as.POSIXct(startdate, format = pb.date),
+                enddate = as.POSIXct(enddate, format = pb.date))][,
+  ':=' (startmonth = month(startdate), startyear = year(startdate),
+        endmonth = month(enddate), endyear = year(enddate))][,
+  datedelta := enddate - startdate][
+  startyear == 2013 & startmonth == 4, period := "spring13"][
+  startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"  
+  ]
+
+# Create a period column for CS
+data.cs[fall12dum == 1, period := "fall12"][
+  spring13dum == 1, period := "spring13" 
+]
+
+# Inner join data sets based on email, isbn, and period
+suffix <- c(".cs", ".pb")
+setkey(data.cs, email, isbn, period)
+data.joined.strict <- merge(data.cs, data.pb,
+                            by = c("email", "isbn", "period"),
+                            suffixes = suffix)
+nrow(data.joined.strict)
+
+# Inner join  only on email and period
+data.joined.loose <- merge(data.cs, data.pb, by = c("email", "period"),
+                           suffixes = suffix)[isbn.cs == isbn.pb, 
+                                              isbn.match := T][
+                                              isbn.cs != isbn.pb,
+                                              isbn.match := F][,
+                                              email.count := .N, by = email 
+                                                               ][,
+                                              pb.count := .N, by = pb.id
+                                                                 ][,
+                                              cs.count := .N, by = cs.id
+                                                                 ]
+
+
+nrow(data.joined.loose)
+setcolorder(data.joined.loose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb"))
 ```
 
-```{r groups}
-# Basic grouping
+```{r xgroups}
+# Exploratory groups
+
+## Overlapping names
+shared.names <- intersect(names(data.cs), names(data.pb))
+
+## Unique ISBNs
+data.cs.isbn.unique <- unique(data.cs$isbn)
+data.pb.isbn.unique <- unique(data.pb$isbn)
 
 ## Clean sample
-data.cs.unique_obs <- data.cs[, .(count = .N), by = c("email", "fall12dum", "spring13dum", "crsesec")]
-data.cs.season_obs <- data.cs[, .(count = .N), by = c("email", "fall12dum", "spring13dum")]
-data.cs.isbn_class <- data.cs[, .(count = .N), by = c("isbn", "crsesec")][
+data.cs.unique_obs <- data.cs[, .(count = .N),
+                               by = .(email, fall12dum, spring13dum, crsesec)]
+data.cs.season_obs <- data.cs[, .(count = .N),
+                               by = .(email, fall12dum, spring13dum)]
+data.cs.isbn_class <- data.cs[, .(count = .N),
+                               by = .(isbn, crsesec)][
   order(crsesec)
 ]
 
+data.cs.control = data.cs[offered == 1]
+data.cs.treatment = data.cs[offered != 1]
+data.cs.treatment.comply = data.cs[offered == 1 & fieldcourse == 1]
+data.cs.treatment.nocomply = data.cs[offered == 1 & fieldcourse != 1]
+
+
 ## Personal beliefs
-data.pb.unique_obs <- 
+data.pb.unique_obs <- data.pb[, .(count = .N),
+                              by = .(email, cr)
+                              ] 
 ```
