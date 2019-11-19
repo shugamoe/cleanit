@@ -12,6 +12,7 @@ library(lubridate)
 data.cs <- read.csv("data/cleansample.csv") %>% as.data.table()
 data.pb <- read.csv("data/pricebeliefs.csv") %>% as.data.table()
 knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
 ```
 
 ```{r clean}
@@ -40,15 +41,19 @@ data.cs[fall12dum == 1, period := "fall12"][
   spring13dum == 1, period := "spring13" 
 ]
 
-# Inner join data sets based on email, isbn, and period
+# Inner join data sets based on email, isbn, and period (strict)
 suffix <- c(".cs", ".pb")
 setkey(data.cs, email, isbn, period)
 data.joined.strict <- merge(data.cs, data.pb,
                             by = c("email", "isbn", "period"),
                             suffixes = suffix)
 nrow(data.joined.strict)
+setcolorder(data.joined.strict, c("cs.id", "pb.id", "email", "period", "crsesec", "course"))
+data.joined.strict[,cs.count := .N, by = cs.id]
+data.joined.strict[,pb.count := .N, by = pb.id]
+data.joined.strict <- data.joined.strict[order(cs.count, pb.count, cs.id)]
 
-# Inner join  only on email and period
+# Inner join  only on email and period (loose)
 data.joined.loose <- merge(data.cs, data.pb, by = c("email", "period"),
                            suffixes = suffix)[isbn.cs == isbn.pb, 
                                               isbn.match := T][
