@@ -1,29 +1,32 @@
 ---
 title: "Cleaning da data"
 author: "Julian McClellan"
-date: "11/18/2019"
+date: "11/something/2019"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm(list = ls())
 library(data.table)
 library(magrittr) # Let's me use pipes (%>%)
 library(lubridate)
-data.cs <- read.csv("data/cleansample.csv") %>% as.data.table()
+
+# Everything in this file will work if it is placed in a directory with a data/ dir containing the data. (Names are the same as they were received in email.) 
+data.cs.raw <- read.csv("data/cleansample.csv") %>% as.data.table()
 data.pb <- read.csv("data/pricebeliefs.csv") %>% as.data.table()
-knitr::opts_chunk$set(echo = TRUE)
-options(scipen=999)
+knitr::opts_chunk$set(include = F, echo = F, message = F)
+options(scipen=999) # No scientific notation
 ```
 
 ```{r clean}
 # ID both datasets
-data.cs[,cs.id := .I]
+data.cs.raw[,cs.id := .I]
 data.pb[,pb.id := .I]
 
+
 # Remove blank emails from clean sample
-nrow(data.cs)
-data.cs <- data.cs[email != ""]
-nrow(data.cs) 
+data.cs.noemail <- data.cs.raw[email == ""]
+data.cs <- data.cs.raw[email != ""]
 
 # Put month and year into PB create a "period" column (fall12 or spring13)
 pb.date <- "%m/%d/%Y %H:%M"
@@ -41,7 +44,12 @@ data.cs[fall12dum == 1, period := "fall12"][
   spring13dum == 1, period := "spring13" 
 ]
 
-# Inner join data sets based on email, isbn, and period (strict)
+# CS: Get fracs of class (crsesec) with offered, and fieldcourse
+data.cs[, sec_fc_count := sum(fieldcourse), by = .(crsesec, period)][,
+          sec_of_count := sum(offered), by = .(crsesec, period)][,
+          ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
+
+# Inner join data sets based on email, isbn, and period (strict). Probably don't wanna do.
 suffix <- c(".cs", ".pb")
 setkey(data.cs, email, isbn, period)
 data.joined.strict <- merge(data.cs, data.pb,
@@ -51,9 +59,9 @@ nrow(data.joined.strict)
 setcolorder(data.joined.strict, c("cs.id", "pb.id", "email", "period", "crsesec", "course"))
 data.joined.strict[,cs.count := .N, by = cs.id]
 data.joined.strict[,pb.count := .N, by = pb.id]
-data.joined.strict <- data.joined.strict[order(cs.count, pb.count, cs.id)]
+data.joined.strict <- data.joined.strict[order(pb.count, email, cs.count, cs.id)]
 
-# Inner join  only on email and period (loose)
+# Inner join  only on email and period (loose). Probably wanna do.
 data.joined.loose <- merge(data.cs, data.pb, by = c("email", "period"),
                            suffixes = suffix)[isbn.cs == isbn.pb, 
                                               isbn.match := T][
@@ -64,10 +72,9 @@ data.joined.loose <- merge(data.cs, data.pb, by = c("email", "period"),
                                               pb.count := .N, by = pb.id
                                                                  ][,
                                               cs.count := .N, by = cs.id
-                                                                 ]
+                                                               ]
 
 
-nrow(data.joined.loose)
 setcolorder(data.joined.loose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb"))
 ```
 
@@ -81,24 +88,96 @@ shared.names <- intersect(names(data.cs), names(data.pb))
 data.cs.isbn.unique <- unique(data.cs$isbn)
 data.pb.isbn.unique <- unique(data.pb$isbn)
 
+## Personal Beliefs
+data.pb.period_obs <- data.pb[, .(count = .N),
+                              by = .(email, period)
+                              ]
+
 ## Clean sample
+### Section grouping
+data.cs.crsesec <- unique(data.cs[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)])
+
+
+
 data.cs.unique_obs <- data.cs[, .(count = .N),
-                               by = .(email, fall12dum, spring13dum, crsesec)]
-data.cs.season_obs <- data.cs[, .(count = .N),
-                               by = .(email, fall12dum, spring13dum)]
-data.cs.isbn_class <- data.cs[, .(count = .N),
-                               by = .(isbn, crsesec)][
-  order(crsesec)
-]
+                               by = .(email, period, crsesec)]
+### Should be equal to number of rows we have in data.pb
+nrow(data.cs.unique_obs) == nrow(data.cs)
 
-data.cs.control = data.cs[offered == 1]
-data.cs.treatment = data.cs[offered != 1]
-data.cs.treatment.comply = data.cs[offered == 1 & fieldcourse == 1]
-data.cs.treatment.nocomply = data.cs[offered == 1 & fieldcourse != 1]
+data.cs.period_obs <- data.cs[, .(count = .N),
+                               by = .(email, period)]
+range(data.cs.period_obs$count) ### Can take up to four classes
 
 
-## Personal beliefs
-data.pb.unique_obs <- data.pb[, .(count = .N),
-                              by = .(email, cr)
-                              ] 
+### Control/treatment breakdowns
+data.cs.control <- data.cs[offered != 1]
+data.cs.treatment <- data.cs[offered == 1]
+data.cs.treatment.comply <- data.cs[offered == 1 & fieldcourse == 1]
+data.cs.treatment.nocomply <- data.cs[offered == 1 & fieldcourse != 1]
+
+# classes.cs.control <- unique(data.cs.control$crsesec)
+# classes.cs.treatment <- unique(data.cs.treatment$crsesec)
+# classes.cs.treatment.comply <- unique(data.cs.treatment.comply$crsesec)
+# classes.cs.treatment.nocomply <- unique(data.cs.treatment.nocomply)
+
+cs.ids_in_joined <- function(cs.df, joined.df = data.joined.loose){
+  rv <- list()
+  cs.ids.unique <- unique(cs.df$cs.id)
+  rv$count.in.joined <- sum(cs.ids.unique %in% joined.df$cs.id)
+  rv$count.percent <- 100 * (rv$count.in / nrow(cs.df))
+  
+  (rv$count.in.joined)
+}
 ```
+
+```{r}
+nrow(data.cs.unique_obs)
+```
+## Joining the data together
+
+The clean sample data (`data.cs`) and the personal beliefs data `data.pb` have several columns in common: ``r shared.names``. I created the `period` column to help join both datasets, since `data.cs` has a `fall12dum` and a `spring13dum`, while `data.pb` has a `startdate` and `enddate` column. Most of these columns in common are student demographic information (iffy for joining).
+
+To assist the joins, I created id columns `cs.id` and `pb.id`.
+
+### Joining schemes
+
+I trialed 2 joining schemes, one "strict" and the other more "loose".
+
+1. Strict `data.joined.strict`
+    * Using the columns `email`, `period`, and `isbn`.
+      * Probably an unnecessary level of strictness?
+    * Result of inner join is only **`r nrow(data.joined.strict)`** rows.
+  
+2. Loose `data.joined.loose`
+    * Using the columns `email`, and `period`.
+    * Result of inner join is **`r nrow(data.joined.loose)`** rows.
+ 
+## Clean Sample Data Breakdown
+
+* The clean sample data has `r nrow(data.cs.raw)` observations. 
+  - `r nrow(data.cs.noemail)` of these observations have no email addresses, leaving **`r nrow(data.cs)`** individually identifiable observations.
+
+* **`r nrow(data.cs.control)`** observations are in the control group (`offered = 0`).
+  * **`r cs.ids_in_joined(data.cs.control, data.joined.strict)`** are in `data.joined.strict`.
+  * **`r cs.ids_in_joined(data.cs.control, data.joined.loose)`** are in `data.joined.loose`.
+* **`r nrow(data.cs.treatment)`** observations are in the overall treatment group (`offered = 1`)
+  - **`r nrow(data.cs.treatment.comply)`** observations are in the compliant treatment group. (`offered = 1 & fieldcourse = 1`)
+    * **`r cs.ids_in_joined(data.cs.treatment.comply, data.joined.strict)`** are in `data.joined.strict`.
+    * **`r cs.ids_in_joined(data.cs.treatment.comply, data.joined.loose)`** are in `data.joined.loose`.
+  - **`r nrow(data.cs.treatment.nocomply)`** observations are in the non-compliant treatment group. (`offered = 1 & fieldcourse != 1`)
+    * **`r cs.ids_in_joined(data.cs.treatment.nocomply, data.joined.strict)`** are in `data.joined.strict`.
+    * **`r cs.ids_in_joined(data.cs.treatment.nocomply, data.joined.loose)`** are in `data.joined.loose`.
+    
+### Class breakdown
+
+* There are **`r nrow(data.cs.crsesec)`** unique "class" observations. (Unique combinations of `crsesec` and `period`) 
+  - **`r nrow(data.cs.crsesec[sec_of_frac == 0])`** of these classes are in the control group (`offered = 0`)
+  - **`r nrow(data.cs.crsesec[sec_of_frac == 1])`** of these classes are in the treatment group. (`offered = 1`).
+    - **`r nrow(data.cs.crsesec[sec_of_frac == 1 & sec_fc_frac == 1])`** of these classes are in the compliant treatment group. (`offered=1` and `fieldcourse=1`)
+    - **`r nrow(data.cs.crsesec[sec_of_frac == 1 & sec_fc_frac == 0])`** of these classes are in the non-compliant treatment group. (`offered=1` and `fieldcourse=0`)
+    
+## Moving ahead
+
+I remember talking about calculating empirical cdfs. [Calculating](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/ecdf.html) and [plotting](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/ecdf.html) them is pretty straightforward. Just not sure what it should be calculated on.
+
+```{r}
