@@ -1,0 +1,166 @@
+# GP utility funcs
+getDataJoined <- function(dataDir = "data/"){
+  require(data.table)
+  require(lubridate)
+
+  dataCSRaw <- fread(paste0(dataDir, 'cleansample.csv'))
+  dataPB <- fread(paste0(dataDir, 'pricebeliefs.csv')) 
+
+  # ID both datasets
+  dataCSRaw[,cs.id := .I]
+  dataPB[,pb.id := .I]
+  # Remove blank emails from clean sample
+  dataCSNoEmail <- dataCSRaw[email == ""]
+  dataCS <- dataCSRaw[email != ""]
+
+  # Put month and year into PB create a "period" column (fall12 or spring13)
+  pbDate <- "%m/%d/%Y %H:%M"
+  dataPB[, ':=' (startdate = as.POSIXct(startdate, format = pbDate),
+                  enddate = as.POSIXct(enddate, format = pbDate))][,
+    ':=' (startmonth = month(startdate), startyear = year(startdate),
+          endmonth = month(enddate), endyear = year(enddate))][,
+    datedelta := enddate - startdate][
+    startyear == 2013 & startmonth == 4, period := "spring13"][
+    startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"  
+    ]
+
+  # Create a period column for CS
+  dataCS[fall12dum == 1, period := "fall12"][
+    spring13dum == 1, period := "spring13" 
+  ]
+
+  # CS: Get fracs of class (crsesec) with offered, and fieldcourse
+  dataCS[, sec_fc_count := sum(fieldcourse), by = .(crsesec, period)][,
+            sec_of_count := sum(offered), by = .(crsesec, period)][,
+            ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
+
+  # Inner join data sets based on email, isbn, and period (strict). Probably don't wanna do.
+  suffix <- c(".cs", ".pb")
+  setkey(dataCS, email, isbn, period)
+  dataJoinedStrict <- merge(dataCS, dataPB,
+                              by = c("email", "isbn", "period"),
+                              suffixes = suffix)
+  setcolorder(dataJoinedStrict, c("cs.id", "pb.id", "email", "period", "crsesec", "course"))
+  dataJoinedStrict[,cs.count := .N, by = cs.id]
+  dataJoinedStrict[,pb.count := .N, by = pb.id]
+  dataJoinedStrict <- dataJoinedStrict[order(pb.count, email, cs.count, cs.id)]
+
+  # Inner join  only on email and period (loose). Probably wanna do.
+  dataJoinedLoose <- merge(dataCS, dataPB, by = c("email", "period"),
+                             suffixes = suffix)[isbn.cs == isbn.pb, 
+                                                isbn.match := T][
+                                                isbn.cs != isbn.pb,
+                                                isbn.match := F][,
+                                                email.count := .N, by = email 
+                                                                 ][,
+                                                pb.count := .N, by = pb.id
+                                                                   ][,
+                                                cs.count := .N, by = cs.id
+                                                                 ]
+
+  setcolorder(dataJoinedLoose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb"))
+
+  return(dataJoinedLoose)
+}
+
+getDataCS  <- function(dataDir = "data/"){
+  dataCSRaw <- fread(paste0(dataDir, 'cleansample.csv'))
+
+  # ID dataset
+  dataCSRaw[,cs.id := .I]
+
+  # Remove blank emails
+  dataCS <- dataCSRaw[email != ""]
+
+  # Create a period column for CS
+  dataCS[fall12dum == 1, period := "fall12"][
+    spring13dum == 1, period := "spring13" 
+  ]
+
+  # CS: Get fracs of class (crsesec) with offered, and fieldcourse
+  dataCS[, sec_fc_count := sum(fieldcourse), by = .(crsesec, period)][,
+            sec_of_count := sum(offered), by = .(crsesec, period)][,
+            ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
+
+  return(dataCS)
+}
+
+## http://www.cookbook-r.com/Manipulating_data/Summarizing_data/
+## Summarizes data.
+## Gives count, mean, standard deviation, standard error of the mean, and confidence 
+## interval (default 95%).
+##   data: a data frame.
+##   measurevar: the name of a column that contains the variable to be summariezed
+##   groupvars: a vector containing names of columns that contain grouping variables
+##   na.rm: a boolean that indicates whether to ignore NA's
+##   conf.interval: the percent range of the confidence interval (default is 95%)
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95) {
+    require(doBy)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # Collapse the data
+    formula <- as.formula(paste(measurevar, paste(groupvars, collapse=" + "), sep=" ~ "))
+    datac <- summaryBy(formula, data=data, FUN=c(length2,mean,sd), na.rm=na.rm)
+
+    # Rename columns
+    names(datac)[ names(datac) == paste(measurevar, ".mean",    sep="") ] <- measurevar
+    names(datac)[ names(datac) == paste(measurevar, ".sd",      sep="") ] <- "sd"
+    names(datac)[ names(datac) == paste(measurevar, ".length2", sep="") ] <- "N"
+    
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+    
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+    
+    return(datac)
+}
+
+# Funcs for drawing made in room C35 2/24/2020
+# (1) binary treat/no treat
+createTreatmentPlot <- function(data = getDataJoined()){
+  require(ggplot2)
+  require(magrittr)
+
+  # Treatment and control column, then a 
+  data[offered != 1, treatOrControl := "control"][
+    offered == 1, treatOrControl := "treat"][
+    offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
+    offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
+    ]
+
+  ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) + geom_bar() + labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N = ", nrow(data)))
+}
+
+# (2a) Conditional on treat: # classes in treatment
+createTreatmentPlotClasses  <- function(data = getDataCS()){
+  require(ggplot2)
+
+  dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)])
+
+  dataUniqueClass[sec_of_frac == 0, treatOrControl := "control"][
+                  sec_of_frac == 1, treatOrControl := "treat"][
+                  sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
+                  sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
+
+  ggplot(dataUniqueClass, aes(treatOrControl, fill = treatComplyOrNot)) + geom_bar() + labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N (classes) = ", nrow(dataUniqueClass)))
+}
+
+# (2b) Compare online price, bookstore price, their difference, proportion.
+createTreatmentPlotClassesPriceDiff  <- function(data = getDataCS()){
+  require(ggplot2)
+
+  # Include, 'uncnewp', 'uncusedp', 'onlinenewp', 'onlineusedp'
+  dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac, uncnewp, uncusedp, onlinenewp, onlineusedp)])
+}
+
+
+
+
