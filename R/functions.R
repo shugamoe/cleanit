@@ -58,7 +58,7 @@ getDataJoined <- function(dataDir = "data/"){
                                                 cs.count := .N, by = cs.id
                                                                  ]
 
-  setcolorder(dataJoinedLoose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb"))
+  setcolorder(dataJoinedLoose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb", "major.pb", "major.cs", "freshdum.pb", "freshdum.cs"))
 
   return(dataJoinedLoose)
 }
@@ -96,6 +96,7 @@ getDataCS  <- function(dataDir = "data/"){
 ##   conf.interval: the percent range of the confidence interval (default is 95%)
 summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95) {
     require(doBy)
+    require(data.table)
 
     # New version of length which can handle NA's: if na.rm==T, don't count them
     length2 <- function (x, na.rm=FALSE) {
@@ -111,16 +112,16 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.i
     names(datac)[ names(datac) == paste(measurevar, ".mean",    sep="") ] <- measurevar
     names(datac)[ names(datac) == paste(measurevar, ".sd",      sep="") ] <- "sd"
     names(datac)[ names(datac) == paste(measurevar, ".length2", sep="") ] <- "N"
-    
+
     datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
-    
+
     # Confidence interval multiplier for standard error
     # Calculate t-statistic for confidence interval: 
     # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
     ciMult <- qt(conf.interval/2 + .5, datac$N-1)
     datac$ci <- datac$se * ciMult
-    
-    return(datac)
+
+    return(as.data.table(datac))
 }
 
 # Funcs for drawing made in room C35 2/24/2020
@@ -129,7 +130,7 @@ createTreatmentPlot <- function(data = getDataJoined()){
   require(ggplot2)
   require(magrittr)
 
-  # Treatment and control column, then a 
+  # Treatment and control column, then a compliant/non-compliant treatment grouping
   data[offered != 1, treatOrControl := "control"][
     offered == 1, treatOrControl := "treat"][
     offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
@@ -140,7 +141,7 @@ createTreatmentPlot <- function(data = getDataJoined()){
 }
 
 # (2a) Conditional on treat: # classes in treatment
-createTreatmentPlotClasses  <- function(data = getDataCS()){
+createTreatmentPlotClasses  <- function(data = getDataJoined()){
   require(ggplot2)
 
   dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)])
@@ -154,13 +155,82 @@ createTreatmentPlotClasses  <- function(data = getDataCS()){
 }
 
 # (2b) Compare online price, bookstore price, their difference, proportion.
-createTreatmentPlotClassesPriceDiff  <- function(data = getDataCS()){
+createTreatmentPlotClassesPriceDiff  <- function(data = getDataJoined()){
   require(ggplot2)
+  require(magrittr)
 
   # Include, 'uncnewp', 'uncusedp', 'onlinenewp', 'onlineusedp'
   dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac, uncnewp, uncusedp, onlinenewp, onlineusedp)])
+  dataUniqueClass[sec_of_frac == 0, treatOrControl := "control"][
+                  sec_of_frac == 1, treatOrControl := "treat"][
+                  sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
+                  sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
+
+  uncnewpSummary <- summarySE(dataUniqueClass, measurevar="uncnewp", groupvars=c("treatOrControl", "treatComplyOrNot"))[, price.where := "uncnewp"] %>% setnames("uncnewp", "price")
+  uncusedpSummary <- summarySE(dataUniqueClass, measurevar="uncusedp", groupvars=c("treatOrControl", "treatComplyOrNot"), na.rm = TRUE)[, price.where := "uncusedp"] %>% setnames("uncusedp", "price")
+  onlinenewpSummary <- summarySE(dataUniqueClass, measurevar="onlinenewp", groupvars=c("treatOrControl", "treatComplyOrNot"))[, price.where := "onlinenewp"] %>% setnames("onlinenewp", "price")
+  onlineusedpSummary <- summarySE(dataUniqueClass, measurevar="onlineusedp", groupvars=c("treatOrControl", "treatComplyOrNot"))[, price.where := "onlineusedp"] %>% setnames("onlineusedp", "price")
+
+  priceSummary  <- rbind(uncnewpSummary, uncusedpSummary, onlinenewpSummary, onlineusedpSummary)
+
+
+  ggplot(priceSummary, aes(x=price.where, y=price)) + 
+    geom_bar(position=position_dodge(), stat="identity") + 
+    geom_errorbar(aes(ymin=price-ci, ymax=price+ci),
+                  width=.2,                    # Width of the error bars
+                  position=position_dodge(.9)) +
+    labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = "95% CI") +
+    facet_wrap(treatOrControl ~ treatComplyOrNot) + 
+    theme_minimal()
+}
+# 3 Treat/Control in major class
+createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
+  require(ggplot2)
+
+  # Treatment and control column, then a compliant/non-compliant treatment grouping
+  data[offered != 1, treatOrControl := "control"][
+    offered == 1, treatOrControl := "treat"][
+    offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
+    offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
+    ]
+  # Make major.cs column plotting friendly
+  data[major.cs == 0, major := "(0) Course not in major"][major.cs == 1, major := "(1) Course in major"]
+
+
+  # There are duplicate clean sample (CS) IDs here but unique price belief ids. We want unique CS ids only since the "major" column for CS is binary
+  dataUniqueCS  <- unique(data[,.(cs.id, email, offered, treatOrControl, treatComplyOrNot, major)])
+
+  ggplot(dataUniqueCS, aes(treatOrControl, fill = treatComplyOrNot)) +
+    geom_bar() +
+    labs(title = "Treat/No Treat breakdown by whether Clean Sample Class is in Major",
+         subtitle = paste0("W/ treatment compliance. N = ", nrow(dataUniqueCS))) +
+    facet_wrap(. ~ major) +
+    theme_minimal()
 }
 
+# 4 Inexperience (freshman) vs experienced  
+createTreatmentPlotFreshman  <- function(data = getDataJoined()){
+  require(ggplot2)
 
+  # Treatment and control column, then a compliant/non-compliant treatment grouping
+  data[offered != 1, treatOrControl := "control"][
+    offered == 1, treatOrControl := "treat"][
+    offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
+    offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
+    ]
 
+  # Make freshdum column plotting friendly
+  data[freshdum.pb == 0, freshdum := "(0) 2nd, 3rd, 4th year"][freshdum.pb == 1, freshdum := "(1) Freshman"]
+
+  ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
+    geom_bar() +
+    labs(title = "Treat/No Treat breakdown by Freshman status",
+         subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) +
+    facet_wrap(. ~ freshdum) +
+    theme_minimal()
+}
+
+data.joined  <- getDataJoined()
+data.cs <- fread('data/cleansample.csv')
+data.pb <- fread('data/pricebeliefs.csv') 
 
