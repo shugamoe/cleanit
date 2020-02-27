@@ -181,7 +181,9 @@ createTreatmentPlot <- function(data = getDataJoined()){
 
   (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
-    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    # geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
+             stat="count", vjust = -1) +
     labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) + 
     theme_minimal()
   )
@@ -207,7 +209,9 @@ createTreatmentPlotClasses  <- function(data = getDataJoined()){
 
   (ggplot(dataUniqueClass, aes(treatOrControl, fill = treatComplyOrNot)) +
    geom_bar() +
-    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    # geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
+              stat="count", vjust = -1) +
    labs(title = "Treat/No Treat breakdown by class", subtitle = paste0("W/ treatment compliance. N (classes) = ", nrow(dataUniqueClass))) +
    theme_minimal()
   )
@@ -281,7 +285,9 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
 
   (ggplot(dataUniqueCS, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
-    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    # geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
+        stat = "count", vjust = -1) +
     labs(title = "Treat/No Treat breakdown by whether Clean Sample Class is in Major",
          subtitle = paste0("W/ treatment compliance. N = ", nrow(dataUniqueCS))) +
     facet_wrap(. ~ major.plot) +
@@ -311,7 +317,9 @@ createTreatmentPlotFreshman  <- function(data = getDataJoined()){
 
   (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
-    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    # geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    geom_text(aes(label = scales::percent((..count..)/sum(..count..))), 
+              stat="count", vjust = -1) +
     labs(title = "Treat/No Treat breakdown by Freshman status",
          subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) +
     facet_wrap(. ~ fresh.plot) +
