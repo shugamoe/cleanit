@@ -250,6 +250,7 @@ createTreatmentPlotClassesPriceDiff  <- function(data = getDataJoined()){
     geom_errorbar(aes(ymin=price-ci, ymax=price+ci),
                   width=.2,                    # Width of the error bars
                   position=position_dodge(.9)) +
+    geom_text(aes(label=round(price), vjust = -.5, hjust = -.8)) + 
     labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = "95% CI") +
     facet_wrap(treatOrControl ~ treatComplyOrNot) + 
     theme_minimal() + 
@@ -299,8 +300,7 @@ createTreatmentPlotFreshman  <- function(data = getDataJoined()){
   require(ggplot2)
 
   # Treatment and control column, then a compliant/non-compliant treatment grouping
-  data[offered != 1, treatOrControl := "control"][
-    offered == 1, treatOrControl := "treat"][
+  data[offered != 1, treatOrControl := "control"][ offered == 1, treatOrControl := "treat"][
     offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
     offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
     ]
