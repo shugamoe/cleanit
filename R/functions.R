@@ -266,7 +266,7 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
     ]
 
   # Make major.cs column plotting friendly
-  data  <- tryCatch({
+  dataUniqueCS  <- tryCatch({
     data[major.cs == 0, major.plot := "(0) Course not in major"][major.cs == 1, major.plot := "(1) Course in major"]
   },error=function(cond){
     message("Handling exception . . .")
@@ -277,7 +277,7 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
 
 
   # There are duplicate clean sample (CS) IDs here but unique price belief ids. We want unique CS ids only since the "major" column for CS is binary
-  dataUniqueCS  <- unique(data[,.(cs.id, email, offered, treatOrControl, treatComplyOrNot, major.plot)])
+  # dataUniqueCS  <- unique(data[,.(cs.id, email, offered, treatOrControl, treatComplyOrNot, major.plot)])
 
   (ggplot(dataUniqueCS, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
