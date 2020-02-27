@@ -1,5 +1,5 @@
 # GP utility funcs
-getDataJoined <- function(dataDir = "data/"){
+getDataJoined <- function(dataDir = "data/", join = "looser"){
   require(data.table)
   require(lubridate)
 
@@ -58,9 +58,29 @@ getDataJoined <- function(dataDir = "data/"){
                                                 cs.count := .N, by = cs.id
                                                                  ]
 
-  setcolorder(dataJoinedLoose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb", "major.pb", "major.cs", "freshdum.pb", "freshdum.cs"))
+  # Inner join  only on email and period (looser)
+  dataJoinedLooser <- merge(dataCS, dataPB, by = c("email"),
+                             suffixes = suffix)[isbn.cs == isbn.pb, 
+                                                isbn.match := T][
+                                                isbn.cs != isbn.pb,
+                                                isbn.match := F][,
+                                                email.count := .N, by = email 
+                                                                 ][,
+                                                pb.count := .N, by = pb.id
+                                                                   ][,
+                                                cs.count := .N, by = cs.id
+                                                                 ]
+  # An even looser join allows for clean sample observations to join to price
+  # beliefs observations as long as period.cs <= period.pb
+  dataJoinedLooser  <- dataJoinedLooser[(period.cs == "fall12" & period.pb %in% c("fall12", "spring13"))
+                                          | (period.cs == "spring13" & period.pb == "spring13")]
 
-  return(dataJoinedLoose)
+
+  setcolorder(dataJoinedLoose, c("cs.id", "pb.id", "email", "period", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb", "major.pb", "major.cs", "freshdum.pb", "freshdum.cs"))
+  setcolorder(dataJoinedLooser, c("cs.id", "pb.id", "email", "period.cs", "period.pb", "crsesec", "course", "isbn.match", "isbn.cs", "isbn.pb", "major.pb", "major.cs", "freshdum.pb", "freshdum.cs"))
+
+  returnData  <- switch(join, "strict" = dataJoinedStrict, "loose" = dataJoinedLoose, "looser" = dataJoinedLooser)
+  return(returnData)
 }
 
 getDataCS  <- function(dataDir = "data/"){
@@ -83,6 +103,28 @@ getDataCS  <- function(dataDir = "data/"){
             ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
 
   return(dataCS)
+}
+
+getDataPB  <- function(dataDir = "data/"){
+  require(data.table)
+  require(lubridate)
+
+  dataPB <- fread(paste0(dataDir, 'pricebeliefs.csv')) 
+
+  # ID dataset
+  dataPB[,pb.id := .I]
+
+  # Put month and year into PB create a "period" column (fall12 or spring13)
+  pbDate <- "%m/%d/%Y %H:%M"
+  dataPB[, ':=' (startdate = as.POSIXct(startdate, format = pbDate),
+                  enddate = as.POSIXct(enddate, format = pbDate))][,
+    ':=' (startmonth = month(startdate), startyear = year(startdate),
+          endmonth = month(enddate), endyear = year(enddate))][,
+    datedelta := enddate - startdate][
+    startyear == 2013 & startmonth == 4, period := "spring13"][
+    startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"  
+    ]
+  return(dataPB)
 }
 
 ## http://www.cookbook-r.com/Manipulating_data/Summarizing_data/
@@ -137,21 +179,38 @@ createTreatmentPlot <- function(data = getDataJoined()){
     offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
     ]
 
-  ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) + geom_bar() + labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N = ", nrow(data)))
+  (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
+    geom_bar() +
+    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) + 
+    theme_minimal()
+  )
 }
 
 # (2a) Conditional on treat: # classes in treatment
 createTreatmentPlotClasses  <- function(data = getDataJoined()){
   require(ggplot2)
 
-  dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)])
+  dataUniqueClass  <- tryCatch({
+    unique(data[,.(crsesec, period.cs, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)])
+  },error=function(cond){
+    message("Handling exception. . . ")
+    message(cond)
+    return(unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac)]))
+    }
+  )
 
   dataUniqueClass[sec_of_frac == 0, treatOrControl := "control"][
                   sec_of_frac == 1, treatOrControl := "treat"][
                   sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
                   sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
 
-  ggplot(dataUniqueClass, aes(treatOrControl, fill = treatComplyOrNot)) + geom_bar() + labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N (classes) = ", nrow(dataUniqueClass)))
+  (ggplot(dataUniqueClass, aes(treatOrControl, fill = treatComplyOrNot)) +
+   geom_bar() +
+    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+   labs(title = "Treat/No Treat breakdown by class", subtitle = paste0("W/ treatment compliance. N (classes) = ", nrow(dataUniqueClass))) +
+   theme_minimal()
+  )
 }
 
 # (2b) Compare online price, bookstore price, their difference, proportion.
@@ -160,7 +219,15 @@ createTreatmentPlotClassesPriceDiff  <- function(data = getDataJoined()){
   require(magrittr)
 
   # Include, 'uncnewp', 'uncusedp', 'onlinenewp', 'onlineusedp'
-  dataUniqueClass  <- unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac, uncnewp, uncusedp, onlinenewp, onlineusedp)])
+  dataUniqueClass  <- tryCatch({
+    unique(data[,.(crsesec, period.cs, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac, uncnewp, uncusedp, onlinenewp, onlineusedp)])
+  },error=function(cond){
+    message("Handling exception. . . ")
+    message(cond)
+    return(unique(data[,.(crsesec, period, sec_fc_count, sec_fc_frac, sec_of_count, sec_of_frac, uncnewp, uncusedp, onlinenewp, onlineusedp)]))
+    }
+  ) 
+    
   dataUniqueClass[sec_of_frac == 0, treatOrControl := "control"][
                   sec_of_frac == 1, treatOrControl := "treat"][
                   sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
@@ -174,15 +241,19 @@ createTreatmentPlotClassesPriceDiff  <- function(data = getDataJoined()){
   priceSummary  <- rbind(uncnewpSummary, uncusedpSummary, onlinenewpSummary, onlineusedpSummary)
 
 
-  ggplot(priceSummary, aes(x=price.where, y=price)) + 
+  (ggplot(priceSummary, aes(x=price.where, y=price)) + 
     geom_bar(position=position_dodge(), stat="identity") + 
     geom_errorbar(aes(ymin=price-ci, ymax=price+ci),
                   width=.2,                    # Width of the error bars
                   position=position_dodge(.9)) +
     labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = "95% CI") +
     facet_wrap(treatOrControl ~ treatComplyOrNot) + 
-    theme_minimal()
+    theme_minimal() + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  )
+
 }
+
 # 3 Treat/Control in major class
 createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
   require(ggplot2)
@@ -193,19 +264,28 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
     offered == 1 & fieldcourse == 1, treatComplyOrNot := "comply"][
     offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
     ]
+
   # Make major.cs column plotting friendly
-  data[major.cs == 0, major := "(0) Course not in major"][major.cs == 1, major := "(1) Course in major"]
+  data  <- tryCatch({
+    data[major.cs == 0, major.plot := "(0) Course not in major"][major.cs == 1, major.plot := "(1) Course in major"]
+  },error=function(cond){
+    message("Handling exception . . .")
+    message(cond)
+    return(data[major == 0, major.plot := "(0) Course not in major"][major == 1, major.plot := "(1) Course in major"])
+  }
+  )
 
 
   # There are duplicate clean sample (CS) IDs here but unique price belief ids. We want unique CS ids only since the "major" column for CS is binary
-  dataUniqueCS  <- unique(data[,.(cs.id, email, offered, treatOrControl, treatComplyOrNot, major)])
+  dataUniqueCS  <- unique(data[,.(cs.id, email, offered, treatOrControl, treatComplyOrNot, major.plot)])
 
-  ggplot(dataUniqueCS, aes(treatOrControl, fill = treatComplyOrNot)) +
+  (ggplot(dataUniqueCS, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
+    geom_text(stat='count', aes(label=..count..), vjust=-1) +
     labs(title = "Treat/No Treat breakdown by whether Clean Sample Class is in Major",
          subtitle = paste0("W/ treatment compliance. N = ", nrow(dataUniqueCS))) +
-    facet_wrap(. ~ major) +
-    theme_minimal()
+    facet_wrap(. ~ major.plot) +
+    theme_minimal())
 }
 
 # 4 Inexperience (freshman) vs experienced  
@@ -220,17 +300,31 @@ createTreatmentPlotFreshman  <- function(data = getDataJoined()){
     ]
 
   # Make freshdum column plotting friendly
-  data[freshdum.pb == 0, freshdum := "(0) 2nd, 3rd, 4th year"][freshdum.pb == 1, freshdum := "(1) Freshman"]
+  data  <- tryCatch({
+    data[freshdum.pb == 0, fresh.plot := "(0) 2nd, 3rd, 4th year"][freshdum.pb == 1, fresh.plot := "(1) Freshman"]
+  },error=function(cond){
+    message("Handling exception . . . ")
+    message(cond)
+    return(data[freshdum == 0, fresh.plot := "(0) 2nd, 3rd, 4th year"][freshdum == 1, fresh.plot := "(1) Freshman"])
+    }
+  )
 
-  ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
+  (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
+    geom_text(stat='count', aes(label=..count..), vjust=-1) +
     labs(title = "Treat/No Treat breakdown by Freshman status",
          subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) +
-    facet_wrap(. ~ freshdum) +
-    theme_minimal()
+    facet_wrap(. ~ fresh.plot) +
+    theme_minimal())
 }
 
-data.joined  <- getDataJoined()
-data.cs <- fread('data/cleansample.csv')
-data.pb <- fread('data/pricebeliefs.csv') 
-
+data.joined.looser  <- getDataJoined()
+data.joined.loose  <- getDataJoined(join = "loose")
+data.joined.strict  <- getDataJoined(join = "strict")
+data.cs <- getDataCS()# fread('data/cleansample.csv')
+data.pb <- getDataPB()# fread('data/pricebeliefs.csv') 
+createTreatmentPlot()
+# createTreatmentPlotClasses()
+# createTreatmentPlotClassesPriceDiff()
+# createTreatmentPlotMajorClass()
+# createTreatmentPlotFreshman()
