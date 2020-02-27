@@ -179,11 +179,14 @@ createTreatmentPlot <- function(data = getDataJoined()){
     offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
     ]
 
+  # Help our labels look nice
+  data$treatComplyOrNot  <- factor(data$treatComplyOrNot, levels = c("nocomply", "comply"))
+
   (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
     # geom_text(stat='count', aes(label=..count..), vjust=-1) +
     geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
-             stat="count", vjust = -1) +
+             stat="count", vjust = 1.1) +
     labs(title = "Treat/No Treat breakdown", subtitle = paste0("W/ treatment compliance. N = ", nrow(data))) + 
     theme_minimal()
   )
@@ -206,12 +209,14 @@ createTreatmentPlotClasses  <- function(data = getDataJoined()){
                   sec_of_frac == 1, treatOrControl := "treat"][
                   sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
                   sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
+  # Help our labels look nice
+  dataUniqueClass$treatComplyOrNot  <- factor(dataUniqueClass$treatComplyOrNot, levels = c("nocomply", "comply"))
 
   (ggplot(dataUniqueClass, aes(treatOrControl, fill = treatComplyOrNot)) +
    geom_bar() +
     # geom_text(stat='count', aes(label=..count..), vjust=-1) +
     geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
-              stat="count", vjust = -1) +
+              stat="count", vjust = 1.1) +
    labs(title = "Treat/No Treat breakdown by class", subtitle = paste0("W/ treatment compliance. N (classes) = ", nrow(dataUniqueClass))) +
    theme_minimal()
   )
@@ -236,6 +241,7 @@ createTreatmentPlotClassesPriceDiff  <- function(data = getDataJoined()){
                   sec_of_frac == 1, treatOrControl := "treat"][
                   sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
                   sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
+
 
   uncnewpSummary <- summarySE(dataUniqueClass, measurevar="uncnewp", groupvars=c("treatOrControl", "treatComplyOrNot"))[, price.where := "uncnewp"] %>% setnames("uncnewp", "price")
   uncusedpSummary <- summarySE(dataUniqueClass, measurevar="uncusedp", groupvars=c("treatOrControl", "treatComplyOrNot"), na.rm = TRUE)[, price.where := "uncusedp"] %>% setnames("uncusedp", "price")
@@ -270,6 +276,10 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
     offered == 1 & fieldcourse != 1, treatComplyOrNot := "nocomply"
     ]
 
+  # Help labels look nice
+  data$treatComplyOrNot  <- factor(data$treatComplyOrNot, levels = c("nocomply", "comply"))
+
+
   # Make major.cs column plotting friendly
   dataUniqueCS  <- tryCatch({
     data[major.cs == 0, major.plot := "(0) Course not in major"][major.cs == 1, major.plot := "(1) Course in major"]
@@ -288,7 +298,7 @@ createTreatmentPlotMajorClass  <- function(data = getDataJoined()){
     geom_bar() +
     # geom_text(stat='count', aes(label=..count..), vjust=-1) +
     geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
-        stat = "count", vjust = -1) +
+        stat = "count", vjust = 1.1) +
     labs(title = "Treat/No Treat breakdown by whether Clean Sample Class is in Major",
          subtitle = paste0("W/ treatment compliance. N = ", nrow(dataUniqueCS))) +
     facet_wrap(. ~ major.plot) +
@@ -314,6 +324,9 @@ createTreatmentPlotFreshman  <- function(data = getDataJoined()){
     return(data[freshdum == 0, fresh.plot := "(0) 2nd, 3rd, 4th year"][freshdum == 1, fresh.plot := "(1) Freshman"])
     }
   )
+  
+  # Helps our labels look nice
+  data$treatComplyOrNot  <- factor(data$treatComplyOrNot, levels = c("nocomply", "comply"))
 
   (ggplot(data, aes(treatOrControl, fill = treatComplyOrNot)) +
     geom_bar() +
