@@ -496,10 +496,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree46d3c35a6763eab3a83b22ddccfe28c7f6297b59targetblank46d3c35a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/46d3c35a6763eab3a83b22ddccfe28c7f6297b59" target="_blank">46d3c35</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree29ec1f27813fd6df4361e1c4ad9a5cc433f1220dtargetblank29ec1f2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/29ec1f27813fd6df4361e1c4ad9a5cc433f1220d" target="_blank">29ec1f2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree46d3c35a6763eab3a83b22ddccfe28c7f6297b59targetblank46d3c35a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree29ec1f27813fd6df4361e1c4ad9a5cc433f1220dtargetblank29ec1f2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -515,9 +515,6 @@ Untracked files:
     Untracked:  data/cleansample.csv
     Untracked:  data/pricebeliefs.csv
     Untracked:  packrat/src/
-
-Unstaged changes:
-    Modified:   R/functions.R
 
 </code></pre>
 <p>
@@ -556,6 +553,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/29ec1f27813fd6df4361e1c4ad9a5cc433f1220d/analysis/summaryStats.Rmd" target="_blank">29ec1f2</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+<td>
+wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), verbose = T)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/5112c00745b22d26b1cb16887017c6542c0a6fd0/docs/summaryStats.html" target="_blank">5112c00</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+<td>
+indciate price plots use # classes
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -715,8 +746,8 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 </div>
 <div id="plots-for-clean-sample-data" class="section level1">
 <h1>Plots for Clean Sample Data</h1>
-<div id="general-treatment-breakdown" class="section level2">
-<h2>General Treatment Breakdown</h2>
+<div id="treatment-breakdown-observation-level" class="section level2">
+<h2>Treatment Breakdown: Observation Level</h2>
 <p><img src="figure/summaryStats.Rmd/cs_gtreat-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cs_gtreat-1">
@@ -755,9 +786,91 @@ Julian McClellan
 </table>
 </div>
 </div>
+<div id="clean-sample-students-freshman-status" class="section level3">
+<h3>Clean Sample Students’ Freshman Status</h3>
+<p><img src="figure/summaryStats.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-1-1.png" target="_blank">a44e6f2</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="treatment-breakdown-classes" class="section level2">
-<h2>Treatment Breakdown: Classes</h2>
+</div>
+</div>
+<div id="class-in-student-major" class="section level3">
+<h3>Class in Student Major?</h3>
+<p><img src="figure/summaryStats.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-2-1.png" target="_blank">a44e6f2</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="treatment-breakdown-classes-level" class="section level2">
+<h2>Treatment Breakdown: Classes Level</h2>
 <p><img src="figure/summaryStats.Rmd/cs_gtreatclass-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cs_gtreatclass-1">
@@ -823,6 +936,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/shugamoe/cleanit/blob/5112c00745b22d26b1cb16887017c6542c0a6fd0/docs/figure/summaryStats.Rmd/cs_gtreatbprice-1.png" target="_blank">5112c00</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/cs_gtreatbprice-1.png" target="_blank">a44e6f2</a>
 </td>
 <td>
@@ -838,88 +962,6 @@ Julian McClellan
 </div>
 </div>
 </div>
-<div id="treatment-breakdown-clean-sample-class-in-student-major" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Class in Student Major</h2>
-<p><img src="figure/summaryStats.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
-Past versions of unnamed-chunk-1-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-1-1.png" target="_blank">a44e6f2</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-02-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="treatment-breakdown-clean-sample-students-freshman-status" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Students’ Freshman Status</h2>
-<p><img src="figure/summaryStats.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
-Past versions of unnamed-chunk-2-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-2-1.png" target="_blank">a44e6f2</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-02-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 </div>
 <div id="plots-for-loose-joined-data" class="section level1">
 <h1>Plots for Loose Joined Data</h1>
@@ -927,8 +969,8 @@ Julian McClellan
 <h2>Overview of Join</h2>
 <p>The “loose” joined data joins the clean sample and price beliefs tables on <code>email</code> and <code>period</code>. Period joins are allowed only if the <code>period</code> of the clean sample is the same as the price beliefs <code>period</code>.</p>
 </div>
-<div id="general-treatment-breakdown-1" class="section level2">
-<h2>General Treatment Breakdown</h2>
+<div id="treatment-breakdown-observation-level-1" class="section level2">
+<h2>Treatment Breakdown: Observation Level</h2>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -967,9 +1009,8 @@ Julian McClellan
 </table>
 </div>
 </div>
-</div>
-<div id="treatment-breakdown-classes-1" class="section level2">
-<h2>Treatment Breakdown: Classes</h2>
+<div id="clean-sample-students-freshman-status-1" class="section level3">
+<h3>Clean Sample Students’ Freshman Status</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
@@ -1008,8 +1049,9 @@ Julian McClellan
 </table>
 </div>
 </div>
-<div id="classes-book-price-comparison-1" class="section level3">
-<h3>Classes: Book Price Comparison</h3>
+</div>
+<div id="class-in-student-major-1" class="section level3">
+<h3>Class in Student Major?</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
@@ -1035,6 +1077,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/shugamoe/cleanit/blob/5112c00745b22d26b1cb16887017c6542c0a6fd0/docs/figure/summaryStats.Rmd/unnamed-chunk-5-1.png" target="_blank">5112c00</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-5-1.png" target="_blank">a44e6f2</a>
 </td>
 <td>
@@ -1050,8 +1103,8 @@ Julian McClellan
 </div>
 </div>
 </div>
-<div id="treatment-breakdown-clean-sample-class-in-student-major-1" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Class in Student Major</h2>
+<div id="treatment-breakdown-classes-level-1" class="section level2">
+<h2>Treatment Breakdown: Classes Level</h2>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
@@ -1090,9 +1143,8 @@ Julian McClellan
 </table>
 </div>
 </div>
-</div>
-<div id="treatment-breakdown-clean-sample-students-freshman-status-1" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Students’ Freshman Status</h2>
+<div id="classes-book-price-comparison-1" class="section level3">
+<h3>Classes: Book Price Comparison</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
@@ -1133,14 +1185,15 @@ Julian McClellan
 </div>
 </div>
 </div>
+</div>
 <div id="plots-for-looser-joined-data" class="section level1">
 <h1>Plots for Looser Joined Data</h1>
 <div id="overview-of-join-1" class="section level2">
 <h2>Overview of Join</h2>
 <p>The “looser” joined data joins the clean sample and price beliefs tables on <code>email</code> and <code>period</code>. Period joins are allowed as long as the <code>period</code> of the clean sample occurs during the same <code>period</code> or earlier than the price beliefs. <code>period.cs &lt;= period.pb</code></p>
 </div>
-<div id="general-treatment-breakdown-2" class="section level2">
-<h2>General Treatment Breakdown</h2>
+<div id="treatment-breakdown-observation-level-2" class="section level2">
+<h2>Treatment Breakdown: Observation Level</h2>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
@@ -1179,9 +1232,8 @@ Julian McClellan
 </table>
 </div>
 </div>
-</div>
-<div id="treatment-breakdown-classes-2" class="section level2">
-<h2>Treatment Breakdown: Classes</h2>
+<div id="clean-sample-students-freshman-status-2" class="section level3">
+<h3>Clean Sample Students’ Freshman Status</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
@@ -1220,8 +1272,9 @@ Julian McClellan
 </table>
 </div>
 </div>
-<div id="classes-book-price-comparison-2" class="section level3">
-<h3>Classes: Book Price Comparison</h3>
+</div>
+<div id="class-in-student-major-2" class="section level3">
+<h3>Class in Student Major?</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
@@ -1247,6 +1300,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/shugamoe/cleanit/blob/5112c00745b22d26b1cb16887017c6542c0a6fd0/docs/figure/summaryStats.Rmd/unnamed-chunk-10-1.png" target="_blank">5112c00</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-02-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/shugamoe/cleanit/blob/a44e6f29343636cfbf01ff4c8f5dcac4bd1d8e7a/docs/figure/summaryStats.Rmd/unnamed-chunk-10-1.png" target="_blank">a44e6f2</a>
 </td>
 <td>
@@ -1262,8 +1326,8 @@ Julian McClellan
 </div>
 </div>
 </div>
-<div id="treatment-breakdown-clean-sample-class-in-student-major-2" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Class in Student Major</h2>
+<div id="treatment-breakdown-classes-level-2" class="section level2">
+<h2>Treatment Breakdown: Classes Level</h2>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
@@ -1302,9 +1366,8 @@ Julian McClellan
 </table>
 </div>
 </div>
-</div>
-<div id="treatment-breakdown-clean-sample-students-freshman-status-2" class="section level2">
-<h2>Treatment Breakdown: Clean Sample Students’ Freshman Status</h2>
+<div id="classes-book-price-comparison-2" class="section level3">
+<h3>Classes: Book Price Comparison</h3>
 <p><img src="figure/summaryStats.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
@@ -1389,6 +1452,7 @@ loaded via a namespace (and not attached):
 [49] pkgconfig_2.0.3  MASS_7.3-51.4    Matrix_1.2-18    assertthat_0.2.1
 [53] rmarkdown_2.1    R6_2.4.1         nlme_3.1-142     igraph_1.2.4.2  
 [57] git2r_0.26.1     compiler_3.6.2  </code></pre>
+</div>
 </div>
 </div>
 </div>
