@@ -49,12 +49,22 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 
 # Plots for Clean Sample Data 
 
-## General Treatment Breakdown
+## Treatment Breakdown: Observation Level
 ```{r cs_gtreat, include=TRUE}
 createTreatmentPlot("cs", dataCS)
 ```
 
-## Treatment Breakdown: Classes
+### Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("cs", dataCS)
+```
+
+### Class in Student Major?
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("cs", dataCS)
+```
+
+## Treatment Breakdown: Classes Level
 ```{r cs_gtreatclass, include=TRUE}
 createTreatmentPlotClasses("cs", dataCS)
 ```
@@ -64,15 +74,7 @@ createTreatmentPlotClasses("cs", dataCS)
 createTreatmentPlotClassesPriceDiff("cs", dataCS)
 ```
 
-## Treatment Breakdown: Clean Sample Class in Student Major 
-```{r, include=TRUE}
-createTreatmentPlotMajorClass("cs", dataCS)
-```
 
-## Treatment Breakdown: Clean Sample Students' Freshman Status
-```{r, include=TRUE}
-createTreatmentPlotFreshman("cs", dataCS)
-```
 
 # Plots for Loose Joined Data
 
@@ -82,12 +84,22 @@ The "loose" joined data joins the clean sample and price beliefs tables on
 `email` and `period`. Period joins are allowed only if the `period` of the
 clean sample is the same as the price beliefs `period`.
 
-## General Treatment Breakdown
+## Treatment Breakdown: Observation Level
 ```{r, include=TRUE}
 createTreatmentPlot("loose", dataJoinedLoose)
 ```
 
-## Treatment Breakdown: Classes
+### Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("loose", dataJoinedLoose)
+```
+
+### Class in Student Major?
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("loose", dataJoinedLoose)
+```
+
+## Treatment Breakdown: Classes Level
 ```{r, include=TRUE}
 createTreatmentPlotClasses("loose", dataJoinedLoose)
 ```
@@ -95,16 +107,6 @@ createTreatmentPlotClasses("loose", dataJoinedLoose)
 ### Classes: Book Price Comparison
 ```{r, include=TRUE}
 createTreatmentPlotClassesPriceDiff("loose", dataJoinedLoose)
-```
-
-## Treatment Breakdown: Clean Sample Class in Student Major 
-```{r, include=TRUE}
-createTreatmentPlotMajorClass("loose", dataJoinedLoose)
-```
-
-## Treatment Breakdown: Clean Sample Students' Freshman Status
-```{r, include=TRUE}
-createTreatmentPlotFreshman("loose", dataJoinedLoose)
 ```
 
 # Plots for Looser Joined Data
@@ -116,12 +118,22 @@ The "looser" joined data joins the clean sample and price beliefs tables on
 clean sample occurs during the same `period` or earlier than the price beliefs.
 `period.cs <= period.pb`
 
-## General Treatment Breakdown
+## Treatment Breakdown: Observation Level
 ```{r, include=TRUE}
 createTreatmentPlot("looser", dataJoinedLooser)
 ```
 
-## Treatment Breakdown: Classes
+### Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("looser", dataJoinedLooser)
+```
+
+### Class in Student Major?
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("looser", dataJoinedLooser)
+```
+
+## Treatment Breakdown: Classes Level
 ```{r, include=TRUE}
 createTreatmentPlotClasses("looser", dataJoinedLooser)
 ```
@@ -129,14 +141,4 @@ createTreatmentPlotClasses("looser", dataJoinedLooser)
 ### Classes: Book Price Comparison
 ```{r, include=TRUE}
 createTreatmentPlotClassesPriceDiff("looser", dataJoinedLooser)
-```
-
-## Treatment Breakdown: Clean Sample Class in Student Major 
-```{r, include=TRUE}
-createTreatmentPlotMajorClass("looser", dataJoinedLooser)
-```
-
-## Treatment Breakdown: Clean Sample Students' Freshman Status
-```{r, include=TRUE}
-createTreatmentPlotFreshman("looser", dataJoinedLooser)
 ```
