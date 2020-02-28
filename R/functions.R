@@ -271,7 +271,7 @@ createTreatmentPlotClassesPriceDiff  <- function(dataType, data = NULL){
                   width=.2,                    # Width of the error bars
                   position=position_dodge(.9)) +
     geom_text(aes(label=round(price), vjust = -.5, hjust = -.8)) +
-    labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = paste0("95% CI (N = ", N, ")")) +
+    labs(title = "Class Textbook price means by treatment group and textbook source/condition.", subtitle = paste0("95% CI | N = ", N, "")) +
     facet_wrap(treatOrControl ~ treatComplyOrNot) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
