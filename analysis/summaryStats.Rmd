@@ -47,7 +47,7 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
   - `period=spring13` set if `startyear == 2013` and `startmonth == 4`
 * Final size: `r nrow(dataPB)`
 
-# Summary Statistics Plots for Clean Sample Data 
+# Plots for Clean Sample Data 
 
 ## General Treatment Breakdown
 ```{r cs_gtreat, include=TRUE}
@@ -74,7 +74,7 @@ createTreatmentPlotMajorClass("cs", dataCS)
 createTreatmentPlotFreshman("cs", dataCS)
 ```
 
-# Summary Statistics Plots for Loose Joined Data
+# Plots for Loose Joined Data
 
 ## Overview of Join
 
@@ -107,7 +107,7 @@ createTreatmentPlotMajorClass("loose", dataJoinedLoose)
 createTreatmentPlotFreshman("loose", dataJoinedLoose)
 ```
 
-# Summary Statistics Plots for Looser Joined Data
+# Plots for Looser Joined Data
 
 ## Overview of Join
 
