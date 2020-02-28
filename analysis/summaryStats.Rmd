@@ -49,12 +49,12 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 
 # Plots for Clean Sample Data 
 
-## Treatment Breakdown: Observation Level
+## Treatment Breakdown: Obs Level
 ```{r cs_gtreat, include=TRUE}
 createTreatmentPlot("cs", dataCS)
 ```
 
-### Clean Sample Students' Freshman Status
+### Freshman Status
 ```{r, include=TRUE}
 createTreatmentPlotFreshman("cs", dataCS)
 ```
@@ -84,12 +84,12 @@ The "loose" joined data joins the clean sample and price beliefs tables on
 `email` and `period`. Period joins are allowed only if the `period` of the
 clean sample is the same as the price beliefs `period`.
 
-## Treatment Breakdown: Observation Level
+## Treatment Breakdown: Obs Level
 ```{r, include=TRUE}
 createTreatmentPlot("loose", dataJoinedLoose)
 ```
 
-### Clean Sample Students' Freshman Status
+### Freshman Status
 ```{r, include=TRUE}
 createTreatmentPlotFreshman("loose", dataJoinedLoose)
 ```
@@ -118,12 +118,12 @@ The "looser" joined data joins the clean sample and price beliefs tables on
 clean sample occurs during the same `period` or earlier than the price beliefs.
 `period.cs <= period.pb`
 
-## Treatment Breakdown: Observation Level
+## Treatment Breakdown: Obs Level
 ```{r, include=TRUE}
 createTreatmentPlot("looser", dataJoinedLooser)
 ```
 
-### Clean Sample Students' Freshman Status
+### Freshman Status
 ```{r, include=TRUE}
 createTreatmentPlotFreshman("looser", dataJoinedLooser)
 ```
