@@ -1,0 +1,142 @@
+---
+title: "Summary Statistics"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+<!-- author: "Julian McClellan" -->
+<!-- date: "2/something/2020" -->
+<!-- output:  -->
+<!-- html_document: -->
+<!-- toc: true -->
+
+```{r setup, include=FALSE}
+source("R/functions.R")
+source("R/packages.R")
+knitr::opts_chunk$set(echo = F, message = F, warning=F)
+options(scipen=999) # No scientific notation
+
+dataPBRaw <- fread("data/pricebeliefs.csv")
+dataCSRaw <- fread("data/cleansample.csv") 
+dataCS  <- getDataCS()
+dataPB  <- getDataPB()
+dataJoinedLoose  <- getDataJoined(join = "loose")
+dataJoinedLooser  <- getDataJoined(join = "looser")
+```
+
+# Data Cleaning procedures
+
+## Clean Sample 
+
+* Initial Size: `r nrow(dataCSRaw)`
+* Remove blank email addresses `r nrow(dataCSRaw[email == ""])`
+* `period` column created with values `fall12` and `spring13` corresponding to
+  `TRUE` values of `fall12dum` and `spring13dum` respectively.
+* Final size: `r nrow(dataCS)`
+
+## Price Beliefs
+
+* Initial Size: `r nrow(dataPBRaw)`
+* __Did not__ remove unfinished surveys (`r nrow(dataPBRaw[finished == 0])` did not finish.)
+* `period` column created with values `fall12` and `spring13`.
+  - `startyear` and `startmonth` created from original column `startdate`
+  - `period=fall12` set if `startyear == 2012` and (`startmonth == 11` or `startmonth == 12`)
+  - `period=spring13` set if `startyear == 2013` and `startmonth == 4`
+* Final size: `r nrow(dataPB)`
+
+# Summary Statistics Plots for Clean Sample Data 
+
+## General Treatment Breakdown
+```{r cs_gtreat, include=TRUE}
+createTreatmentPlot("cs", dataCS)
+```
+
+## Treatment Breakdown: Classes
+```{r cs_gtreatclass, include=TRUE}
+createTreatmentPlotClasses("cs", dataCS)
+```
+
+## Treatment Breakdown: Book Price Comparison
+```{r cs_gtreatbprice, include=TRUE}
+createTreatmentPlotClassesPriceDiff("cs", dataCS)
+```
+
+## Treatment Breakdown: Clean Sample Class in Student Major 
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("cs", dataCS)
+```
+
+## Treatment Breakdown: Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("cs", dataCS)
+```
+
+# Summary Statistics Plots for Loose Joined Data
+
+## Overview of Join
+
+The "loose" joined data joins the clean sample and price beliefs tables on
+`email` and `period`. Period joins are allowed only if the `period` of the
+clean sample is the same as the price beliefs `period`.
+
+## General Treatment Breakdown
+```{r, include=TRUE}
+createTreatmentPlot("loose", dataJoinedLoose)
+```
+
+## Treatment Breakdown: Classes
+```{r, include=TRUE}
+createTreatmentPlotClasses("loose", dataJoinedLoose)
+```
+
+## Treatment Breakdown: Book Price Comparison
+```{r, include=TRUE}
+createTreatmentPlotClassesPriceDiff("loose", dataJoinedLoose)
+```
+
+## Treatment Breakdown: Clean Sample Class in Student Major 
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("loose", dataJoinedLoose)
+```
+
+## Treatment Breakdown: Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("loose", dataJoinedLoose)
+```
+
+# Summary Statistics Plots for Looser Joined Data
+
+## Overview of Join
+
+The "looser" joined data joins the clean sample and price beliefs tables on
+`email` and `period`. Period joins are allowed as long as the `period` of the
+clean sample occurs during the same `period` or earlier than the price beliefs.
+`period.cs <= period.pb`
+
+## General Treatment Breakdown
+```{r, include=TRUE}
+createTreatmentPlot("looser", dataJoinedLooser)
+```
+
+## Treatment Breakdown: Classes
+```{r, include=TRUE}
+createTreatmentPlotClasses("looser", dataJoinedLooser)
+```
+
+## Treatment Breakdown: Book Price Comparison
+```{r, include=TRUE}
+createTreatmentPlotClassesPriceDiff("looser", dataJoinedLooser)
+```
+
+## Treatment Breakdown: Clean Sample Class in Student Major 
+```{r, include=TRUE}
+createTreatmentPlotMajorClass("looser", dataJoinedLooser)
+```
+
+## Treatment Breakdown: Clean Sample Students' Freshman Status
+```{r, include=TRUE}
+createTreatmentPlotFreshman("looser", dataJoinedLooser)
+```
