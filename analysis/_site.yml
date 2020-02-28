@@ -5,8 +5,8 @@ navbar:
   left:
   - text: Home
     href: index.html
-  - text: Summary Statistics
-    href: summaryStatistics.html
+  - text: Summary Stats
+    href: summaryStats.html
   - text: About
     href: about.html
   - text: License
