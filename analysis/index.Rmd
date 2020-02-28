@@ -8,4 +8,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-[Summary Statistics](./docs/summaryStatistics.html)
+[Summary Statistics](./docs/summaryStats.html)
