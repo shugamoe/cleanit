@@ -59,7 +59,7 @@ createTreatmentPlot("cs", dataCS)
 createTreatmentPlotClasses("cs", dataCS)
 ```
 
-## Treatment Breakdown: Book Price Comparison
+### Classes: Book Price Comparison
 ```{r cs_gtreatbprice, include=TRUE}
 createTreatmentPlotClassesPriceDiff("cs", dataCS)
 ```
@@ -92,7 +92,7 @@ createTreatmentPlot("loose", dataJoinedLoose)
 createTreatmentPlotClasses("loose", dataJoinedLoose)
 ```
 
-## Treatment Breakdown: Book Price Comparison
+### Classes: Book Price Comparison
 ```{r, include=TRUE}
 createTreatmentPlotClassesPriceDiff("loose", dataJoinedLoose)
 ```
@@ -126,7 +126,7 @@ createTreatmentPlot("looser", dataJoinedLooser)
 createTreatmentPlotClasses("looser", dataJoinedLooser)
 ```
 
-## Treatment Breakdown: Book Price Comparison
+### Classes: Book Price Comparison
 ```{r, include=TRUE}
 createTreatmentPlotClassesPriceDiff("looser", dataJoinedLooser)
 ```

@@ -84,6 +84,7 @@ getDataJoined <- function(dataDir = "data/", join = "looser"){
 }
 
 getDataCS  <- function(dataDir = "data/"){
+  require(data.table)
   dataCSRaw <- fread(paste0(dataDir, 'cleansample.csv'))
 
   # ID dataset
@@ -253,6 +254,7 @@ createTreatmentPlotClassesPriceDiff  <- function(dataType, data = NULL){
                   sec_of_frac == 1, treatOrControl := "treat"][
                   sec_of_frac == 1 & sec_fc_frac == 1, treatComplyOrNot := "comply"][
                   sec_of_frac == 1 & sec_fc_frac == 0, treatComplyOrNot := "nocomply"]
+  N  <- nrow(dataUniqueClass)
 
 
   uncnewpSummary <- summarySE(dataUniqueClass, measurevar="uncnewp", groupvars=c("treatOrControl", "treatComplyOrNot"))[, price.where := "uncnewp"] %>% setnames("uncnewp", "price")
@@ -269,7 +271,7 @@ createTreatmentPlotClassesPriceDiff  <- function(dataType, data = NULL){
                   width=.2,                    # Width of the error bars
                   position=position_dodge(.9)) +
     geom_text(aes(label=round(price), vjust = -.5, hjust = -.8)) +
-    labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = "95% CI") +
+    labs(title = "Textbook price means by treatment group and textbook source/condition.", subtitle = paste0("95% CI (N = ", N, ")")) +
     facet_wrap(treatOrControl ~ treatComplyOrNot) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
