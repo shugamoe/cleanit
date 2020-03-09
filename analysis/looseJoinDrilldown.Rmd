@@ -52,7 +52,10 @@ simply check rows for which `fieldcourse = 0` but have `fieldCourseSum >= 1`.
 ## Final Effect
 
 Thankfully, there are only `r nrow(dataJoinedLoose[fieldcourse == 0 & fieldCourseSum >= 1])` rows
-that have incorrectly specified treatment assignment in the loose joined data out of `r nrow(dataJoinedLoose)` total rows.
+that have incorrectly specified treatment assignment in the loose joined data
+out of `r nrow(dataJoinedLoose)` total rows. 
+
+These rows can now be properly specified with `fieldCourseSum`.
 
 
 # Drilldown of the Loose Join Data
