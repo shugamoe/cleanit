@@ -82,8 +82,12 @@ come Spring 2013, or disappear entirely.
 updateList <- createBeliefUpdateGroups()
 ```
 
+## Numbers don't work out for it
+
 Unfortunately of the `r nrow(updateList$initial)` observations in the loose
 joined data that were in the control group for Fall 2012 (`period == "fall12"`
 and `fieldCourseSum == 0`), `r nrow(updateList$afterTreatment)` of them become
-part of the treatment come Spring 2013, and `r nrow(updateList$afterControl)` remain
-as part of the control group in Spring 2013 as well.
+part of the treatment come Spring 2013 (same `email` for control in Fall 2012,
+`period == "spring13"`, and `fieldCourseSum >= 1`), and `r nrow(updateList$afterControl)`
+remain as part of the control group in Spring 2013 (same `email`, `period ==
+"spring13"`, and `fieldCourseSum == 0`).
