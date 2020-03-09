@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree7afd48608ec0d9cb2b79defe10f994ffd4995779targetblank7afd486a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/7afd48608ec0d9cb2b79defe10f994ffd4995779" target="_blank">7afd486</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree13572e2d40fcbf91af0ecbf80cf3cd761fd3f281targetblank13572e2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/13572e2d40fcbf91af0ecbf80cf3cd761fd3f281" target="_blank">13572e2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree7afd48608ec0d9cb2b79defe10f994ffd4995779targetblank7afd486a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree13572e2d40fcbf91af0ecbf80cf3cd761fd3f281targetblank13572e2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -561,6 +561,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/13572e2d40fcbf91af0ecbf80cf3cd761fd3f281/analysis/looseJoinDrilldown.Rmd" target="_blank">13572e2</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+<td>
+wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), verbose = T)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/686c6e8bca611ecf240a666e87db436cd0d7af3a/docs/looseJoinDrilldown.html" target="_blank">686c6e8</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -682,6 +716,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/shugamoe/cleanit/blob/686c6e8bca611ecf240a666e87db436cd0d7af3a/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">686c6e8</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/shugamoe/cleanit/blob/55137735103297a566a81305d4693204eeaf1d8e/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">5513773</a>
 </td>
 <td>
@@ -699,7 +744,9 @@ Julian McClellan
 <div id="tracking-price-belief-updates" class="section level1">
 <h1>Tracking Price Belief Updates</h1>
 <p>3/6/2020 we discussed the possibility of tracking “updates” to students’ price beliefs. We posited that from Fall 2012 to Spring 2013, there would be a number of students who start under the control group in Fall 2012, and from there that <code>initial</code> group would split into an <code>afterTreatment</code> and <code>afterControl</code> group come Spring 2013, or disappear entirely.</p>
-<p>Unfortunately of the 633 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013, and 27 remain as part of the control group in Spring 2013 as well.</p>
+<div id="numbers-dont-work-out-for-it" class="section level2">
+<h2>Numbers don’t work out for it</h2>
+<p>Unfortunately of the 633 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 27 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -744,6 +791,7 @@ loaded via a namespace (and not attached):
 [41] promises_1.1.0   htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1
 [45] httpuv_1.5.2     labeling_0.3     stringi_1.4.6    lazyeval_0.2.2  
 [49] munsell_0.5.0    crayon_1.3.4    </code></pre>
+</div>
 </div>
 </div>
 
