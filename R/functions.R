@@ -3,36 +3,8 @@ getDataJoined <- function(dataDir = "data/", join = "looser"){
   require(data.table)
   require(lubridate)
 
-  dataCSRaw <- fread(paste0(dataDir, 'cleansample.csv'))
-  dataPB <- fread(paste0(dataDir, 'pricebeliefs.csv'))
-
-  # ID both datasets
-  dataCSRaw[,cs.id := .I]
-  dataPB[,pb.id := .I]
-  # Remove blank emails from clean sample
-  dataCSNoEmail <- dataCSRaw[email == ""]
-  dataCS <- dataCSRaw[email != ""]
-
-  # Put month and year into PB create a "period" column (fall12 or spring13)
-  pbDate <- "%m/%d/%Y %H:%M"
-  dataPB[, ':=' (startdate = as.POSIXct(startdate, format = pbDate),
-                  enddate = as.POSIXct(enddate, format = pbDate))][,
-    ':=' (startmonth = month(startdate), startyear = year(startdate),
-          endmonth = month(enddate), endyear = year(enddate))][,
-    datedelta := enddate - startdate][
-    startyear == 2013 & startmonth == 4, period := "spring13"][
-    startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"
-    ]
-
-  # Create a period column for CS
-  dataCS[fall12dum == 1, period := "fall12"][
-    spring13dum == 1, period := "spring13"
-  ]
-
-  # CS: Get fracs of class (crsesec) with offered, and fieldcourse
-  dataCS[, sec_fc_count := sum(fieldcourse), by = .(crsesec, period)][,
-            sec_of_count := sum(offered), by = .(crsesec, period)][,
-            ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
+  dataCS <- getDataCS()
+  dataPB <- getDataPB()
 
   # Inner join data sets based on email, isbn, and period (strict). Probably don't wanna do.
   suffix <- c(".cs", ".pb")
@@ -83,7 +55,7 @@ getDataJoined <- function(dataDir = "data/", join = "looser"){
   return(returnData)
 }
 
-getDataCS  <- function(dataDir = "data/"){
+getDataCS  <- function(dataDir = "data/", handleMultiClasses = T){
   require(data.table)
   dataCSRaw <- fread(paste0(dataDir, 'cleansample.csv'))
 
@@ -102,6 +74,13 @@ getDataCS  <- function(dataDir = "data/"){
   dataCS[, sec_fc_count := sum(fieldcourse), by = .(crsesec, period)][,
             sec_of_count := sum(offered), by = .(crsesec, period)][,
             ':=' (sec_fc_frac = sec_fc_count / .N, sec_of_frac = sec_of_count / .N), by = .(crsesec, period)]
+
+  # Added to account for 3/6/2020 drawing in C48.
+  if (handleMultiClasses == T){
+    dataCS[, emailPeriodCount := .N, by=c("email", "period")]
+    dataCS[, offeredSum := sum(offered), by=c("email", "period")]
+    dataCS[, fieldCourseSum := sum(fieldcourse), by=c("email", "period")]
+  }
 
   return(dataCS)
 }
@@ -350,6 +329,60 @@ createTreatmentPlotFreshman  <- function(dataType, data = NULL){
     facet_wrap(. ~ fresh.plot) +
     theme_minimal())
 }
+
+# Funcs for drawing made in room C48 3/6/2020
+
+# This breakdown all the different levels we care about for the loose joined
+# data
+createLooseJoinDrilldownPlot <- function(){
+  require(ggplot2)
+  require(data.table)
+
+  djLoose <- getDataJoined(join="loose")
+
+  djLoose[fieldCourseSum >= 1, treatOrControl := "treat"]
+  djLoose[fieldCourseSum == 0, treatOrControl := "control"]
+  djLoose[freshdum.cs == 1, freshmanStatus := "freshman"]
+  djLoose[freshdum.cs == 0, freshmanStatus := "sophOrHigher"]
+
+  # Helps our labels look nice
+  djLoose$freshmanStatus  <- factor(djLoose$freshmanStatus, levels = c("sophOrHigher", "freshman"))
+
+  (ggplot(djLoose, aes(treatOrControl, fill = freshmanStatus)) +
+    geom_bar() +
+    geom_text(aes(label = scales::percent((..count..)/sum(..count..))),
+                  stat="count", vjust = 1.1) +
+    facet_wrap(. ~ period) +
+    labs(title = "Treatment/Control breakdown by Freshman Status and Semester",
+         subtitle = paste0("N = ", nrow(djLoose))) +
+    theme_minimal())
+}
+
+# Test updates in beliefs from treatment from fall12 to spring13 
+createBeliefUpdateGroups <- function(){
+  require(data.table)
+  returnList = list()
+
+  djLoose <- getDataJoined(join="loose")
+
+  # Initial control group
+  initial  <- djLoose[period == "fall12" & fieldCourseSum == 0, ':=' (initial = 1)][initial == 1]
+  emails <- unique(initial$email)
+  djLoose[period == "spring13" & email %chin% emails, after := 1]
+  afterTreatment <- djLoose[after == 1 & fieldCourseSum >= 1]
+  afterControl <- djLoose[after == 1 & fieldCourseSum == 0]
+
+  returnList$initial <- initial
+  returnList$afterTreatment <- afterTreatment
+  returnList$afterControl <- afterControl
+  returnList$after <- djLoose[after == 1]
+  returnList$fall12 <- djLoose[period == "fall12"]
+  returnList$spring13 <- djLoose[period == "spring13"]
+
+  return(returnList)
+}
+
+
 
 # data.joined.looser  <- getDataJoined()
 # data.joined.loose  <- getDataJoined(join = "loose")

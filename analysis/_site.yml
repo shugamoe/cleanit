@@ -7,6 +7,8 @@ navbar:
     href: index.html
   - text: Summary Stats
     href: summaryStats.html
+  - text: Loose Join Drilldown
+    href: looseJoinDrilldown.html
   - text: About
     href: about.html
   - text: License
