@@ -1,0 +1,86 @@
+---
+title: "Loose Joined Data Drilldown"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+<!-- author: "Julian McClellan" -->
+<!-- date: "2/something/2020" -->
+<!-- output:  -->
+<!-- html_document: -->
+<!-- toc: true -->
+
+```{r setup, include=FALSE}
+source("R/functions.R")
+source("R/packages.R")
+knitr::opts_chunk$set(echo = F, message = F, warning=F)
+options(scipen=999) # No scientific notation
+
+dataPBRaw <- fread("data/pricebeliefs.csv")
+dataCSRaw <- fread("data/cleansample.csv") 
+dataCS  <- getDataCS()
+dataPB  <- getDataPB()
+dataJoinedLoose  <- getDataJoined(join = "loose")
+dataJoinedLooser  <- getDataJoined(join = "looser")
+```
+
+# Multiple classes per semester in the Clean Sample Data 
+
+As was discussed in person, it may be possible for the same combination of
+`email` and `period` (semester) to be represented more than once in the Clean
+Sample data. I.e. someone takes two or more classes that semester that are
+considered in the Clean Sample data. This could be problematic if one of the
+classes was in the treatment group and the other was in the control. Both of
+these clean sample rows will be joined to same row of price beliefs data but in
+one joined row it will seem the student was in treatment and in the other row
+it will seem like the student was in the control group, but since they had
+another class that was in the treatment that same semester, that student, for
+the semester, should be considered in the treatment group.
+
+## Handling this
+
+Before the loosely joined data is created (joining CS to PB on `email` and
+`period`), we create the columns `emailPeriodCount` and `fieldCourseSum` in the
+clean sample data. Thus, after the join, for each row of the loose joined data
+we can determine if the student `email` for the given `period` was actually part
+of the treatment group, even if that given row might have `fieldcourse = 0`. We
+simply check rows for which `fieldcourse = 0` but have `fieldCourseSum >= 1`.
+
+## Final Effect
+
+Thankfully, there are only `r nrow(dataJoinedLoose[fieldcourse == 0 & fieldCourseSum >= 1])` rows
+that have incorrectly specified treatment assignment in the loose joined data out of `r nrow(dataJoinedLoose)` total rows.
+
+
+# Drilldown of the Loose Join Data
+
+Of the `r nrow(dataJoinedLoose)` observations we have in the final loose joined
+dataset, let's investigate how these numbers breakdown in terms of `period`
+(`fall12` or `spring13`), `freshdum.cs` (freshman or not), and `fieldcourse`
+(`1` treatment, `0` control/non-compliant treatment).
+
+
+```{r plotdrilldown}
+createLooseJoinDrilldownPlot()
+```
+
+# Tracking Price Belief Updates  
+
+3/6/2020 we discussed the possibility of tracking "updates" to students' price
+beliefs. We posited that from Fall 2012 to Spring 2013, there would be a number
+of students who start under the control group in Fall 2012, and from there that
+`initial` group would split into an `afterTreatment` and `afterControl` group
+come Spring 2013, or disappear entirely.
+
+```{r getbeliefgroup}
+updateList <- createBeliefUpdateGroups()
+```
+
+Unfortunately of the `r nrow(updateList$initial)` observations in the loose
+joined data that were in the control group for Fall 2012 (`period == "fall12"`
+and `fieldCourseSum == 0`), `r nrow(updateList$afterTreatment)` of them become
+part of the treatment come Spring 2013, and `r nrow(updateList$afterControl)` remain
+as part of the control group in Spring 2013 as well.
