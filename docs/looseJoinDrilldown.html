@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree55137735103297a566a81305d4693204eeaf1d8etargetblank5513773a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/55137735103297a566a81305d4693204eeaf1d8e" target="_blank">5513773</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree7afd48608ec0d9cb2b79defe10f994ffd4995779targetblank7afd486a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/7afd48608ec0d9cb2b79defe10f994ffd4995779" target="_blank">7afd486</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree55137735103297a566a81305d4693204eeaf1d8etargetblank5513773a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree7afd48608ec0d9cb2b79defe10f994ffd4995779targetblank7afd486a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -563,6 +563,40 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/7afd48608ec0d9cb2b79defe10f994ffd4995779/analysis/looseJoinDrilldown.Rmd" target="_blank">7afd486</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+<td>
+wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), verbose = T)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/c6dd0b95b75b9b427479e1cbd35c778a2d34c4d7/docs/looseJoinDrilldown.html" target="_blank">c6dd0b9</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
@@ -617,6 +651,7 @@ wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), view = T,
 <div id="final-effect" class="section level2">
 <h2>Final Effect</h2>
 <p>Thankfully, there are only 36 rows that have incorrectly specified treatment assignment in the loose joined data out of 1575 total rows.</p>
+<p>These rows can now be properly specified with <code>fieldCourseSum</code>.</p>
 </div>
 </div>
 <div id="drilldown-of-the-loose-join-data" class="section level1">
