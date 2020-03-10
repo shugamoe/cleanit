@@ -13,6 +13,7 @@
 
 <title>Loose Joined Data Drilldown</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/darkly.min.css" rel="stylesheet" />
@@ -408,7 +409,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-09
+<strong>Last updated:</strong> 2020-03-10
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -499,10 +500,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree526602d8c264e42ec17991770a5779090174f66ctargetblank526602da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/526602d8c264e42ec17991770a5779090174f66c" target="_blank">526602d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreec9c918b8fa319502e7e8b5826a0c1f8b4fd271cbtargetblankc9c918ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/c9c918b8fa319502e7e8b5826a0c1f8b4fd271cb" target="_blank">c9c918b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree526602d8c264e42ec17991770a5779090174f66ctargetblank526602da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreec9c918b8fa319502e7e8b5826a0c1f8b4fd271cbtargetblankc9c918ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -556,6 +557,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/ff7d96a629d8d15ba858d699a793170d0708f096/docs/looseJoinDrilldown.html" target="_blank">ff7d96a</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -696,13 +714,13 @@ wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), view = T,
 </div>
 <div id="final-effect" class="section level2">
 <h2>Final Effect</h2>
-<p>Thankfully, there are only 36 rows that have incorrectly specified treatment assignment in the loose joined data out of 1575 total rows.</p>
+<p>Thankfully, there are only 36 rows that have incorrectly specified treatment assignment in the loose joined data out of 1536 total rows.</p>
 <p>These rows can now be properly specified with <code>fieldCourseSum</code>.</p>
 </div>
 </div>
 <div id="drilldown-of-the-loose-join-data" class="section level1">
 <h1>Drilldown of the Loose Join Data</h1>
-<p>Of the 1575 observations we have in the final loose joined dataset, let’s investigate how these numbers breakdown in terms of <code>period</code> (<code>fall12</code> or <code>spring13</code>), <code>freshdum.cs</code> (freshman or not), and <code>fieldcourse</code> (<code>1</code> treatment, <code>0</code> control/non-compliant treatment).</p>
+<p>Of the 1536 observations we have in the final loose joined dataset, let’s investigate how these numbers breakdown in terms of <code>period</code> (<code>fall12</code> or <code>spring13</code>), <code>freshdum.cs</code> (freshman or not), and <code>fieldcourse</code> (<code>1</code> treatment, <code>0</code> control/non-compliant treatment).</p>
 <p><img src="figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plotdrilldown-1">
@@ -758,7 +776,7 @@ Julian McClellan
 <p>3/6/2020 we discussed the possibility of tracking “updates” to students’ price beliefs. We posited that from Fall 2012 to Spring 2013, there would be a number of students who start under the control group in Fall 2012, and from there that <code>initial</code> group would split into an <code>afterTreatment</code> and <code>afterControl</code> group come Spring 2013, or disappear entirely.</p>
 <div id="numbers-dont-work-out-for-it" class="section level2">
 <h2>Numbers don’t work out for it</h2>
-<p>Unfortunately of the 633 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 27 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
+<p>Unfortunately of the 621 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 27 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -766,12 +784,12 @@ Julian McClellan
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre><code>R version 3.6.2 (2019-12-12)
+<pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Manjaro Linux
 
 Matrix products: default
-BLAS:   /usr/lib/libopenblasp-r0.3.7.so
+BLAS:   /usr/lib/libopenblasp-r0.3.8.so
 LAPACK: /usr/lib/liblapack.so.3.9.0
 
 locale:
@@ -786,22 +804,22 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggplot2_3.2.1     workflowr_1.6.0   drake_7.10.0      lubridate_1.7.4  
-[5] data.table_1.12.8
+[1] ggplot2_3.3.0     purrr_0.3.3       workflowr_1.6.0   drake_7.11.0     
+[5] lubridate_1.7.4   data.table_1.12.8
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3       pillar_1.4.3     compiler_3.6.2   later_1.0.0     
- [5] git2r_0.26.1     tools_3.6.2      digest_0.6.23    packrat_0.5.0   
- [9] tibble_2.1.3     evaluate_0.14    lifecycle_0.1.0  gtable_0.3.0    
-[13] pkgconfig_2.0.3  rlang_0.4.4      igraph_1.2.4.2   filelock_1.0.2  
-[17] yaml_2.2.1       parallel_3.6.2   xfun_0.12        withr_2.1.2     
-[21] dplyr_0.8.4      stringr_1.4.0    storr_1.2.1      knitr_1.28      
-[25] fs_1.3.1         vctrs_0.2.3      tidyselect_1.0.0 rprojroot_1.3-2 
-[29] grid_3.6.2       glue_1.3.1       R6_2.4.1         base64url_1.4   
-[33] rmarkdown_2.1    txtq_0.2.0       farver_2.0.3     purrr_0.3.3     
-[37] magrittr_1.5     whisker_0.4      backports_1.1.5  scales_1.1.0    
-[41] promises_1.1.0   htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1
-[45] httpuv_1.5.2     labeling_0.3     stringi_1.4.6    lazyeval_0.2.2  
+ [1] Rcpp_1.0.3       pillar_1.4.3     compiler_3.6.3   later_1.0.0     
+ [5] git2r_0.26.1     tools_3.6.3      digest_0.6.23    packrat_0.5.0   
+ [9] tibble_2.1.3     lifecycle_0.2.0  gtable_0.3.0     evaluate_0.14   
+[13] pkgconfig_2.0.3  rlang_0.4.5      igraph_1.2.4.2   cli_2.0.2       
+[17] filelock_1.0.2   yaml_2.2.1       parallel_3.6.3   xfun_0.12       
+[21] withr_2.1.2      dplyr_0.8.5      stringr_1.4.0    storr_1.2.1     
+[25] knitr_1.28       fs_1.3.2         vctrs_0.2.3      tidyselect_1.0.0
+[29] grid_3.6.3       rprojroot_1.3-2  glue_1.3.1       R6_2.4.1        
+[33] fansi_0.4.1      base64url_1.4    rmarkdown_2.1    txtq_0.2.0      
+[37] farver_2.0.3     magrittr_1.5     whisker_0.4      scales_1.1.0    
+[41] backports_1.1.5  promises_1.1.0   htmltools_0.4.0  assertthat_0.2.1
+[45] colorspace_1.4-1 httpuv_1.5.2     labeling_0.3     stringi_1.4.6   
 [49] munsell_0.5.0    crayon_1.3.4    </code></pre>
 </div>
 </div>
