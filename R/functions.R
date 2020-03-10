@@ -82,6 +82,9 @@ getDataCS  <- function(dataDir = "data/", handleMultiClasses = T){
     dataCS[, fieldCourseSum := sum(fieldcourse), by=c("email", "period")]
   }
 
+  # Remove respondents with more than 10 semesters of college
+  dataCS  <- dataCS[semesters <= 10]
+
   return(dataCS)
 }
 
@@ -94,6 +97,9 @@ getDataPB  <- function(dataDir = "data/"){
   # ID dataset
   dataPB[,pb.id := .I]
 
+  # Remove blank emails
+  dataPB  <- dataPB[email != ""]
+
   # Put month and year into PB create a "period" column (fall12 or spring13)
   pbDate <- "%m/%d/%Y %H:%M"
   dataPB[, ':=' (startdate = as.POSIXct(startdate, format = pbDate),
@@ -104,6 +110,10 @@ getDataPB  <- function(dataDir = "data/"){
     startyear == 2013 & startmonth == 4, period := "spring13"][
     startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"
     ]
+
+  # Remove respondents with more than 10 semesters of college
+  dataPB  <- dataPB[semesters <= 10]
+
   return(dataPB)
 }
 
