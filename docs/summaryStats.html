@@ -409,7 +409,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-10
+<strong>Last updated:</strong> 2020-03-12
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -500,10 +500,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree46192429a08c34ba79cd84d8777a0ef3dbc8e477targetblank4619242a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/46192429a08c34ba79cd84d8777a0ef3dbc8e477" target="_blank">4619242</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed7437a97e2d5e5f9f77a126013894647ae4c606ftargetblankd7437a9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/d7437a97e2d5e5f9f77a126013894647ae4c606f" target="_blank">d7437a9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree46192429a08c34ba79cd84d8777a0ef3dbc8e477targetblank4619242a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed7437a97e2d5e5f9f77a126013894647ae4c606ftargetblankd7437a9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -557,6 +557,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/d7437a97e2d5e5f9f77a126013894647ae4c606f/analysis/summaryStats.Rmd" target="_blank">d7437a9</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-12
+</td>
+<td>
+Price belief non-overlapping data breakdown add. Packrat lock add
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/d44f4cfed52f65e94b5247e0f587e59c8d0b37df/docs/summaryStats.html" target="_blank">d44f4cf</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-10
+</td>
+<td>
+Drake r_make() summaryStats page
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -858,11 +892,18 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 </ul>
 <div id="ongoing-price-belief-work" class="section level3">
 <h3>Ongoing Price Belief Work</h3>
+<div id="non-sensical-expectation-filtering" class="section level4">
+<h4>Non-sensical expectation filtering</h4>
 <p>In <a href="https://www.sciencedirect.com/science/article/pii/S016726811630021X?via%3Dihub#fn0060">this paper</a> they drop nonsensical answers; expectations less than 10% or greater than 150% of the bookstore price. However, the price beliefs data has expectation ratio columns for new, used, and rent prices. I’m assuming they only use the new expectation ratios?</p>
 <pre class="r"><code>(
  pbRatios &lt;- names(dataJoinedLoose)[grepl(&quot;ratio&quot;, names(dataJoinedLoose))]
 )</code></pre>
 <pre><code>[1] &quot;newexpratio&quot;   &quot;usedexpratio&quot;  &quot;rentexpnratio&quot;</code></pre>
+</div>
+<div id="price-belief-with-no-treatmentcontrol-information-cant-join-to-clean-sample-data" class="section level4">
+<h4>Price-belief with no treatment/control information (can’t join to Clean Sample data)</h4>
+<p><img src="figure/summaryStats.Rmd/pbonly-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 </div>
 </div>
