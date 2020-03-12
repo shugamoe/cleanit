@@ -392,6 +392,10 @@ createBeliefUpdateGroups <- function(){
   return(returnList)
 }
 
+getColNames  <- function(pattern, table){
+  return(table[,names(table)[grepl(pattern, names(table))],with=F])
+}
+
 
 
 # data.joined.looser  <- getDataJoined()
