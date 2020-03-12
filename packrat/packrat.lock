@@ -199,6 +199,12 @@ Source: CRAN
 Version: 0.8
 Hash: 16aa2cc98d7b68c9d148c263c8dcdbcd
 
+Package: hms
+Source: CRAN
+Version: 0.5.3
+Hash: a0709e1b17b4bc1c27f5235177543e07
+Requires: pkgconfig, rlang, vctrs
+
 Package: htmltools
 Source: CRAN
 Version: 0.4.0
@@ -368,6 +374,12 @@ Source: CRAN
 Version: 3.4.2
 Hash: e1671b1ca2f6c66f29ffb2828e98dc02
 Requires: R6, ps
+
+Package: progress
+Source: CRAN
+Version: 1.2.2
+Hash: 209280eb751acf5899f7c69366e14bd3
+Requires: R6, crayon, hms, prettyunits
 
 Package: promises
 Source: CRAN

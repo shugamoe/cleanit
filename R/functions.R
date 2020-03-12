@@ -392,6 +392,33 @@ createBeliefUpdateGroups <- function(){
   return(returnList)
 }
 
+# From meeting 3/12/2020 pb only freshman/upperclassman by semester breakdown
+createPBOnlyBreakdownPlot <- function(){
+  require(data.table)
+  require(ggplot2)
+
+  dataPB <- getDataPB()
+  dj <- getDataJoined(join="loose")
+
+  dataPBOnly <- dataPB[!(pb.id %in% dj$pb.id)]
+  # print(nrow(dataPB))
+  # print(nrow(dataPBOnly))
+
+  N <- nrow(dataPBOnly)
+  dataPBOnly[freshdum == 1, freshmanStatus := "freshman"]
+  dataPBOnly[freshdum == 0, freshmanStatus := "sophOrHigher"]
+  dataPBOnly$freshmanStatus  <- factor(dataPBOnly$freshmanStatus, levels = c("sophOrHigher", "freshman"))
+
+  (ggplot(dataPBOnly, aes(freshmanStatus)) + 
+   geom_bar() +
+   facet_wrap(. ~ period) + 
+   labs(title="Class Status by Semester", 
+        subtitle=paste0("Price Beliefs data not overlapping with Clean Sample data | N = ", nrow(dataPBOnly))) + 
+    geom_text(aes(label = ..count..),
+             stat="count", vjust = 1.1) +
+   theme_minimal()
+  )
+}
 
 
 # data.joined.looser  <- getDataJoined()

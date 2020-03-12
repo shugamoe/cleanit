@@ -57,6 +57,9 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 
 ### Ongoing Price Belief Work
 
+
+#### Non-sensical expectation filtering
+
 In [this paper](https://www.sciencedirect.com/science/article/pii/S016726811630021X?via%3Dihub#fn0060)
 they drop nonsensical answers; expectations less than 10% or greater than 150%
 of the bookstore price. However, the price beliefs data has expectation ratio
@@ -66,6 +69,12 @@ columns for new, used, and rent prices. I'm assuming they only use the new expec
 (
  pbRatios <- names(dataJoinedLoose)[grepl("ratio", names(dataJoinedLoose))]
 )
+```
+
+#### Price-belief with no treatment/control information (can't join to Clean Sample data)
+
+```{r pbonly}
+createPBOnlyBreakdownPlot()
 ```
 
 # Plots for Clean Sample Data 
