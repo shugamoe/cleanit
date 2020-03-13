@@ -97,9 +97,6 @@ getDataPB  <- function(dataDir = "data/"){
   # ID dataset
   dataPB[,pb.id := .I]
 
-  # Remove blank emails
-  dataPB  <- dataPB[email != ""]
-
   # Put month and year into PB create a "period" column (fall12 or spring13)
   pbDate <- "%m/%d/%Y %H:%M"
   dataPB[, ':=' (startdate = as.POSIXct(startdate, format = pbDate),
@@ -111,11 +108,35 @@ getDataPB  <- function(dataDir = "data/"){
     startyear == 2012 & startmonth %in% c(11, 12), period := "fall12"
     ]
 
+  # Create mu and sigma columns
+
+  # Remove blank emails
+  dataPB  <- dataPB[email != ""]
+
+
   # Remove respondents with more than 10 semesters of college
   dataPB  <- dataPB[semesters <= 10]
 
+  # Remove respondents who give expectation of new price < 10% or > 150% of the new bookstore price.
+  dataPB <- dataPB[newexpratio > .1 & newexpratio < 1.5]
+
   return(dataPB)
 }
+
+calc <- function(lb, lbnewp, ub, ubnewp, newexp){
+  num <- log(ub) - log(lb)
+  denom <- "beef"
+
+}
+
+# Example use. When mu and sigma calculations are finished use this style of func
+# dpb[,c("beef", "pork") := tf(lb, lbnewp), by = pb.id]
+tf <- function(lb, lbnewp){
+  return(list("beef" = lb * lbnewp,
+              "pork" = "it's pork time"
+              ))
+}
+
 
 getData  <- function(dataType){
   rv <- switch(dataType, "cs" = getDataCS(),

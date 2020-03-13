@@ -32,10 +32,10 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 ## Clean Sample 
 
 * Initial Size: `r nrow(dataCSRaw)`
-* Remove blank email addresses `r nrow(dataCSRaw[email == ""])`
+* Remove blank email addresses (`r nrow(dataCSRaw[email == ""])` in raw data).
 * `period` column created with values `fall12` and `spring13` corresponding to
   `TRUE` values of `fall12dum` and `spring13dum` respectively.
-* Removed `r nrow(dataCSRaw[semesters > 10])` responses from those with more than 10 semesters of college.
+* Removed responses from those with more than 10 semesters of college. (`r nrow(dataCSRaw[semesters > 10])` in raw data)
   * Note that the clean sample data and price beliefs data appear to have
     different values of `semester` and `freshdum` for the same instances of
     `email` and `period` (loose join conditions). No explanation as of yet.
@@ -44,15 +44,17 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 ## Price Beliefs
 
 * Initial Size: `r nrow(dataPBRaw)`
-* __Did not__ remove unfinished (`finished == 0`) surveys (`r nrow(dataPBRaw[finished == 0])` did not finish.)
+* __Did not__ remove unfinished(?) (`finished == 0`) surveys (`r nrow(dataPBRaw[finished == 0])` did not finish?)
 * `period` column created with values `fall12` and `spring13`.
   - `startyear` and `startmonth` created from original column `startdate`
   - `period=fall12` set if `startyear == 2012` and (`startmonth == 11` or `startmonth == 12`)
   - `period=spring13` set if `startyear == 2013` and `startmonth == 4`
-* Removed `r nrow(dataPBRaw[semesters > 10])` responses from those with more than 10 semesters of college.
+* Removed responses from those with more than 10 semesters of college (`r nrow(dataPBRaw[semesters > 10])` in raw data.)
   * Note that the clean sample data and price beliefs data appear to have
     different values of `semester` and `freshdum` for the same instances of
     `email` and `period` (loose join conditions). No explanation as of yet.
+* Removed expectations of online new price that are < 10% or > 150% of the
+  new bookstore price (`r nrow(dataPBRaw[newexpratio < .1 | newexpratio > 1.5])` in raw data.)
 * Final size: `r nrow(dataPB)`
 
 ### Ongoing Price Belief Work
