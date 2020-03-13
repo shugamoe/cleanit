@@ -409,7 +409,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-12
+<strong>Last updated:</strong> 2020-03-13
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -500,10 +500,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed7437a97e2d5e5f9f77a126013894647ae4c606ftargetblankd7437a9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/d7437a97e2d5e5f9f77a126013894647ae4c606f" target="_blank">d7437a9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed28a35d62b3b5099a0060314b84d80ab0f6abdb4targetblankd28a35da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/d28a35d62b3b5099a0060314b84d80ab0f6abdb4" target="_blank">d28a35d</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed7437a97e2d5e5f9f77a126013894647ae4c606ftargetblankd7437a9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreed28a35d62b3b5099a0060314b84d80ab0f6abdb4targetblankd28a35da" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -557,6 +557,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/d28a35d62b3b5099a0060314b84d80ab0f6abdb4/analysis/summaryStats.Rmd" target="_blank">d28a35d</a>
+</td>
+<td>
+Julian Chew McClellan
+</td>
+<td>
+2020-03-13
+</td>
+<td>
+Filter non-sensical expectation ratios out of price beliefs. First pass
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/e86831f704a36ac3f2492c48a651da150444be63/docs/summaryStats.html" target="_blank">e86831f</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -864,9 +898,9 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 <h2>Clean Sample</h2>
 <ul>
 <li>Initial Size: 2449</li>
-<li>Remove blank email addresses 105</li>
+<li>Remove blank email addresses (105 in raw data).</li>
 <li><code>period</code> column created with values <code>fall12</code> and <code>spring13</code> corresponding to <code>TRUE</code> values of <code>fall12dum</code> and <code>spring13dum</code> respectively.</li>
-<li>Removed 33 responses from those with more than 10 semesters of college.
+<li>Removed responses from those with more than 10 semesters of college. (33 in raw data)
 <ul>
 <li>Note that the clean sample data and price beliefs data appear to have different values of <code>semester</code> and <code>freshdum</code> for the same instances of <code>email</code> and <code>period</code> (loose join conditions). No explanation as of yet.</li>
 </ul></li>
@@ -877,18 +911,19 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 <h2>Price Beliefs</h2>
 <ul>
 <li>Initial Size: 4785</li>
-<li><strong>Did not</strong> remove unfinished (<code>finished == 0</code>) surveys (537 did not finish.)</li>
+<li><strong>Did not</strong> remove unfinished(?) (<code>finished == 0</code>) surveys (537 did not finish?)</li>
 <li><code>period</code> column created with values <code>fall12</code> and <code>spring13</code>.
 <ul>
 <li><code>startyear</code> and <code>startmonth</code> created from original column <code>startdate</code></li>
 <li><code>period=fall12</code> set if <code>startyear == 2012</code> and (<code>startmonth == 11</code> or <code>startmonth == 12</code>)</li>
 <li><code>period=spring13</code> set if <code>startyear == 2013</code> and <code>startmonth == 4</code></li>
 </ul></li>
-<li>Removed 267 responses from those with more than 10 semesters of college.
+<li>Removed responses from those with more than 10 semesters of college (267 in raw data.)
 <ul>
 <li>Note that the clean sample data and price beliefs data appear to have different values of <code>semester</code> and <code>freshdum</code> for the same instances of <code>email</code> and <code>period</code> (loose join conditions). No explanation as of yet.</li>
 </ul></li>
-<li>Final size: 4518</li>
+<li>Removed expectations of online new price that are &lt; 10% or &gt; 150% of the new bookstore price (12 in raw data.)</li>
+<li>Final size: 4147</li>
 </ul>
 <div id="ongoing-price-belief-work" class="section level3">
 <h3>Ongoing Price Belief Work</h3>
@@ -903,6 +938,43 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 <div id="price-belief-with-no-treatmentcontrol-information-cant-join-to-clean-sample-data" class="section level4">
 <h4>Price-belief with no treatment/control information (can’t join to Clean Sample data)</h4>
 <p><img src="figure/summaryStats.Rmd/pbonly-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pbonly-1">
+Past versions of pbonly-1.png
+</button>
+</p>
+<div id="fig-pbonly-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/e86831f704a36ac3f2492c48a651da150444be63/docs/figure/summaryStats.Rmd/pbonly-1.png" target="_blank">e86831f</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1834,7 +1906,7 @@ Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Manjaro Linux
 
 Matrix products: default
-BLAS:   /usr/lib/libopenblasp-r0.3.8.so
+BLAS:   /usr/lib/libblas.so.3.9.0
 LAPACK: /usr/lib/liblapack.so.3.9.0
 
 locale:
