@@ -522,8 +522,8 @@ Hash: d534108bcd5f34ec73e9eb523751ba20
 
 Package: workflowr
 Source: CRAN
-Version: 1.6.0
-Hash: e70ef44e460a638ffee5cdfca39bf3aa
+Version: 1.6.1
+Hash: 1316def4d43ac25835952dd454090687
 Requires: callr, fs, getPass, git2r, glue, httpuv, httr, knitr,
     rmarkdown, rprojroot, rstudioapi, stringr, whisker, yaml
 

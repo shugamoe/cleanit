@@ -109,6 +109,7 @@ getDataPB  <- function(dataDir = "data/"){
     ]
 
   # Create mu and sigma columns
+  dataPB[,c("mu", "sigma") := calcPBMuSigma(lb, newlb, ub, newub, newexp), by = pb.id]
 
   # Remove blank emails
   dataPB  <- dataPB[email != ""]
@@ -123,10 +124,18 @@ getDataPB  <- function(dataDir = "data/"){
   return(dataPB)
 }
 
-calc <- function(lb, lbnewp, ub, ubnewp, newexp){
-  num <- log(ub) - log(lb)
-  denom <- "beef"
+calcPBMuSigma <- function(lb, newlb, ub, newub, newexp){
+  sigmaNum <- (log(ub) - log(lb))
+  sigmaDenom <- qnorm(newub / 100) - qnorm(newlb / 100)
 
+  sigma <- sigmaNum/sigmaDenom
+  mu <- log(newexp) + log(lb) - sigma * qnorm(newlb / 100)
+
+  return(
+         list("sigma" = sigma,
+              "mu" = mu
+         )
+  )
 }
 
 # Example use. When mu and sigma calculations are finished use this style of func
