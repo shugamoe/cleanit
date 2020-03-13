@@ -409,7 +409,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-12
+<strong>Last updated:</strong> 2020-03-13
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -500,10 +500,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree554672df8f36a7e1298d11f599de1d4cf920f009targetblank554672da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/554672df8f36a7e1298d11f599de1d4cf920f009" target="_blank">554672d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree6a02cee3247486bd5531dcb34a848a39cbcbbd1etargetblank6a02ceea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/6a02cee3247486bd5531dcb34a848a39cbcbbd1e" target="_blank">6a02cee</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree554672df8f36a7e1298d11f599de1d4cf920f009targetblank554672da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree6a02cee3247486bd5531dcb34a848a39cbcbbd1etargetblank6a02ceea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -523,7 +523,6 @@ Untracked files:
 Unstaged changes:
     Modified:   R/functions.R
     Modified:   analysis/summaryStats.Rmd
-    Modified:   packrat/packrat.lock
 
 </code></pre>
 <p>
@@ -562,6 +561,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/08686f9ee7cc7a63bf43b868ff305ea8cd88cb88/docs/looseJoinDrilldown.html" target="_blank">08686f9</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-12
+</td>
+<td>
+adding missing docs
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -736,13 +752,13 @@ wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), view = T,
 </div>
 <div id="final-effect" class="section level2">
 <h2>Final Effect</h2>
-<p>Thankfully, there are only 36 rows that have incorrectly specified treatment assignment in the loose joined data out of 1536 total rows.</p>
+<p>Thankfully, there are only 33 rows that have incorrectly specified treatment assignment in the loose joined data out of 1439 total rows.</p>
 <p>These rows can now be properly specified with <code>fieldCourseSum</code>.</p>
 </div>
 </div>
 <div id="drilldown-of-the-loose-join-data" class="section level1">
 <h1>Drilldown of the Loose Join Data</h1>
-<p>Of the 1536 observations we have in the final loose joined dataset, let’s investigate how these numbers breakdown in terms of <code>period</code> (<code>fall12</code> or <code>spring13</code>), <code>freshdum.cs</code> (freshman or not), and <code>fieldcourse</code> (<code>1</code> treatment, <code>0</code> control/non-compliant treatment).</p>
+<p>Of the 1439 observations we have in the final loose joined dataset, let’s investigate how these numbers breakdown in terms of <code>period</code> (<code>fall12</code> or <code>spring13</code>), <code>freshdum.cs</code> (freshman or not), and <code>fieldcourse</code> (<code>1</code> treatment, <code>0</code> control/non-compliant treatment).</p>
 <p><img src="figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plotdrilldown-1">
@@ -809,7 +825,7 @@ Julian McClellan
 <p>3/6/2020 we discussed the possibility of tracking “updates” to students’ price beliefs. We posited that from Fall 2012 to Spring 2013, there would be a number of students who start under the control group in Fall 2012, and from there that <code>initial</code> group would split into an <code>afterTreatment</code> and <code>afterControl</code> group come Spring 2013, or disappear entirely.</p>
 <div id="numbers-dont-work-out-for-it" class="section level2">
 <h2>Numbers don’t work out for it</h2>
-<p>Unfortunately of the 621 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 27 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
+<p>Unfortunately of the 579 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 26 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -822,7 +838,7 @@ Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Manjaro Linux
 
 Matrix products: default
-BLAS:   /usr/lib/libopenblasp-r0.3.8.so
+BLAS:   /usr/lib/libblas.so.3.9.0
 LAPACK: /usr/lib/liblapack.so.3.9.0
 
 locale:
