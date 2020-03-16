@@ -500,10 +500,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree1e76690f33421246ed9df74381f1d677330edee7targetblank1e76690a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/1e76690f33421246ed9df74381f1d677330edee7" target="_blank">1e76690</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree58c09e3b856cef4dd84c541814131ed1c8b9b4b4targetblank58c09e3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/58c09e3b856cef4dd84c541814131ed1c8b9b4b4" target="_blank">58c09e3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree1e76690f33421246ed9df74381f1d677330edee7targetblank1e76690a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree58c09e3b856cef4dd84c541814131ed1c8b9b4b4targetblank58c09e3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -516,7 +516,6 @@ Ignored files:
 
 Untracked files:
     Untracked:  .drake/
-    Untracked:  analysis/figure/
     Untracked:  data/cleansample.csv
     Untracked:  data/pricebeliefs.csv
     Untracked:  packrat/src/
@@ -558,6 +557,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/58c09e3b856cef4dd84c541814131ed1c8b9b4b4/analysis/summaryStats.Rmd" target="_blank">58c09e3</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-15
+</td>
+<td>
+typo fixed
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/d4b1c05262f33b83449a2c4df0dc4ee766808c5f/docs/summaryStats.html" target="_blank">d4b1c05</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-03-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -991,7 +1024,7 @@ wflow_publish(knitr_in(“analysis/summaryStats.Rmd”), view = T, verbose
 <ul>
 <li><code>mu</code>: 741 observations with <code>NA</code>, <code>NaN</code>, or <code>Inf</code> responses in the final data.</li>
 <li><code>sigma</code>: 676 observations with <code>NA</code>, <code>NaN</code>, or <code>Inf</code> responses in the final data.</li>
-<li>Normalized <code>normmu</code> available, where respondent expected price is normalized by the bookstore price, is available as well.</li>
+<li>Normalized <code>normmu</code> also available. (Utilizes <code>newexpratio</code> instead of <code>newexp</code>.)</li>
 </ul></li>
 <li>Removed responses from those with more than 10 semesters of college (267 in raw data.)
 <ul>
