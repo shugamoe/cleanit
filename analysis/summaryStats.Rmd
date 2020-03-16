@@ -55,8 +55,7 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
   - `sigma`: `r nrow(dataPB[is.na(sigma) | is.nan(sigma) | is.infinite(sigma)])`
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
-  - Normalized `normmu` available, where respondent expected price is
-    normalized by the bookstore price, is available as well.
+  - Normalized `normmu` also available. (Utilizes `newexpratio` instead of `newexp`.)
 * Removed responses from those with more than 10 semesters of college (`r nrow(dataPBRaw[semesters > 10])` in raw data.)
   * Note that the clean sample data and price beliefs data appear to have
     different values of `semester` and `freshdum` for the same instances of
