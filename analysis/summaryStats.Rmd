@@ -49,11 +49,14 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
   - `startyear` and `startmonth` created from original column `startdate`
   - `period=fall12` set if `startyear == 2012` and (`startmonth == 11` or `startmonth == 12`)
   - `period=spring13` set if `startyear == 2013` and `startmonth == 4`
-* `mu` and `sigma` columns created to enable log-normal price distribution comparisons.
+* `mu` and `sigma` columns created to enable log-normal price distribution
+  comparisons of respondent's price distribution for new books. (Uses `newexp`)
   - `mu`: `r nrow(dataPB[is.na(mu) | is.nan(mu) | is.infinite(mu)])`
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
   - `sigma`: `r nrow(dataPB[is.na(sigma) | is.nan(sigma) | is.infinite(sigma)])`
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
+  - Normalized `normmu` available, where respondent expected price is
+    normalized by the bookstore price, is available as well.
 * Removed responses from those with more than 10 semesters of college (`r nrow(dataPBRaw[semesters > 10])` in raw data.)
   * Note that the clean sample data and price beliefs data appear to have
     different values of `semester` and `freshdum` for the same instances of
