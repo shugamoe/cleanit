@@ -1,0 +1,126 @@
+---
+title: "Loose Joined Data Drilldown"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+<!-- author: "Julian McClellan" -->
+<!-- date: "2/something/2020" -->
+<!-- output:  -->
+<!-- html_document: -->
+<!-- toc: true -->
+
+```{r setup, include=FALSE}
+source("R/functions.R")
+source("R/packages.R")
+knitr::opts_chunk$set(echo = F, message = F, warning=F)
+options(scipen=999) # No scientific notation
+
+dataPB <- getDataPB()
+dataCS <- getDataCS()
+
+```
+
+Define 2x2  (And other)
+- 2 experience groups (Freshman and Everyone Else) 
+
+    - (freshdum) = freshman)
+
+- 2 treatment groups (Treatment and Control)
+
+    - offered = 1 --> intent to treated
+
+    - treatme = 1 --> actually treated
+
+- spring12dum = {0,1} or fall12dum = {0,1} 
+
+    - analysis with just fall
+    - analysis with both
+
+Define 2 different outcome variables (Clean Sample)
+- onlinechkdum
+- purchased
+- onlinechoicedum
+
+```{r define_groups}
+# Data frame with combinations of freshman, treatment group, and seasons included
+groupVarsDf <- list(freshVal = c(0, 1), 
+                  treatVal = c(0, 1),
+                  season = c("fall", "all")) %>%
+  do.call(expand.grid, .)
+
+# List of all the different data.frames of interest from the combinations above.
+groupList <- groupVarsDf %>%
+  pmap(.f = getTTestGroup)
+
+indexKey <- data.table(sample1Index = 1:8,
+                           sample2Index = 1:8,
+                           indexName = c(
+                                       # Fall12
+                                       "nonfreshControlFall",
+                                       "freshControlFall",
+                                       "nonfreshTreatFall",
+                                       "freshTreatFall",
+                                       # Fall12 + Spring 13 
+                                       "nonfreshControlAll",
+                                       "freshControlAll",
+                                       "nonfreshTreatAll",
+                                       "freshTreatAll"))
+
+# Please observe an abominable combination of dplyr and data.table
+
+# DFs parameterizing calcTTest function
+fallParams <- list(sample1Index = 1:4,
+                        sample2Index = 1:4) %>%
+  do.call(expand.grid, .) %>%
+  dplyr::filter(sample1Index < sample2Index) %>%
+  as.data.table() %>%
+  merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
+  merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+
+
+allParams <- list(sample1Index = 5:8,
+                        sample2Index = 5:8) %>%
+  do.call(expand.grid, .) %>%
+  dplyr::filter(sample1Index < sample2Index) %>%
+  as.data.table() %>%
+  merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
+  merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+
+fallTTestResults <- fallParams %>%
+  purrr::pmap_df(.f = calcTTest, groupList = groupList)
+
+allTTestResults <- allParams %>%
+  purrr::pmap_df(.f = calcTTest, groupList = groupList)
+```
+
+```{r plot_ttest_results}
+library(ggplot2)
+(ggplot(fallTTestResults, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+
+(ggplot(allTTestResults, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity") +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 + Spring13", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+

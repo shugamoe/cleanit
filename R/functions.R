@@ -195,7 +195,7 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.i
 
 # Funcs for drawing made in room C35 2/24/2020
 # (1) binary treat/no treat
-createTreatmentPlot <- function(dataType, data = NULL){ 
+createTreatmentPlot <- function(dataType, data = NULL){
   require(ggplot2)
   require(magrittr)
   if (is.null(data)){
@@ -396,7 +396,7 @@ createLooseJoinDrilldownPlot <- function(){
     theme_minimal())
 }
 
-# Test updates in beliefs from treatment from fall12 to spring13 
+# Test updates in beliefs from treatment from fall12 to spring13
 createBeliefUpdateGroups <- function(){
   require(data.table)
   returnList = list()
@@ -437,11 +437,11 @@ createPBOnlyBreakdownPlot <- function(){
   dataPBOnly[freshdum == 0, freshmanStatus := "sophOrHigher"]
   dataPBOnly$freshmanStatus  <- factor(dataPBOnly$freshmanStatus, levels = c("sophOrHigher", "freshman"))
 
-  (ggplot(dataPBOnly, aes(freshmanStatus)) + 
+  (ggplot(dataPBOnly, aes(freshmanStatus)) +
    geom_bar() +
-   facet_wrap(. ~ period) + 
-   labs(title="Class Status by Semester", 
-        subtitle=paste0("Price Beliefs data not overlapping with Clean Sample data | N = ", nrow(dataPBOnly))) + 
+   facet_wrap(. ~ period) +
+   labs(title="Class Status by Semester",
+        subtitle=paste0("Price Beliefs data not overlapping with Clean Sample data | N = ", nrow(dataPBOnly))) +
     geom_text(aes(label = ..count..),
              stat="count", vjust = 1.1) +
    theme_minimal()
@@ -450,6 +450,39 @@ createPBOnlyBreakdownPlot <- function(){
 
 getColNames  <- function(pattern, table){
   return(table[,names(table)[grepl(pattern, names(table))],with=F])
+}
+
+getTTestGroup <- function(freshVal, treatVal, season){
+  require(data.table)
+
+  dataCS <- getDataCS()
+
+  group <- dataCS[freshdum == freshVal & treatme == treatVal,]
+
+  # season can be "fall"(12) or "both" (fall12 and spring13)
+
+  if (season == "fall"){
+    group <- group[fall12dum == 1]
+  }
+  return(group)
+}
+
+calcTTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar){
+  require(dplyr)
+  sample1 <- groupList[[sample1Index]][[outcomeVar]]
+  sample2 <- groupList[[sample2Index]][[outcomeVar]]
+
+  results <- t.test(sample1, sample2) %>%
+    broom::tidy() %>%
+    cbind(data.frame(group_compared = glue::glue("{index1Name} - {index2Name}"),
+                     outcomeVar = outcomeVar
+                     )) %>%
+    dplyr::mutate(sig = case_when(p.value < .05 ~ "sig",
+                                  TRUE ~ "nonsig")
+
+    )
+
+  return(results)
 }
 
 
