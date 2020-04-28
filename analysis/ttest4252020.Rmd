@@ -113,7 +113,7 @@ library(ggplot2)
 )
 
 (ggplot(allTTestResults, aes(x=group_compared, y=estimate)) +
-  geom_bar(stat="identity") +
+  geom_bar(stat="identity", aes(fill = sig)) +
   geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
                 width=.2,                    # Width of the error bars
                 ) +
