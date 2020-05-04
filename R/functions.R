@@ -452,7 +452,7 @@ getColNames  <- function(pattern, table){
   return(table[,names(table)[grepl(pattern, names(table))],with=F])
 }
 
-getTTestGroup <- function(freshVal, treatVal, season){
+getTTestGroup <- function(freshVal, treatVal, season, nonComply = T){
   require(data.table)
 
   dataCS <- getDataCS()
@@ -460,14 +460,19 @@ getTTestGroup <- function(freshVal, treatVal, season){
   group <- dataCS[freshdum == freshVal & treatme == treatVal,]
 
   # season can be "fall"(12) or "both" (fall12 and spring13)
-
   if (season == "fall"){
     group <- group[fall12dum == 1]
   }
+
+  # Do we want to leave the non-compliant treatment group in the control?
+  if (nonComply == F & treatVal == 0){
+    group <- group[offered == 0]
+  }
+
   return(group)
 }
 
-calcTTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar){
+calc2STTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar){
   require(dplyr)
   sample1 <- groupList[[sample1Index]][[outcomeVar]]
   sample2 <- groupList[[sample2Index]][[outcomeVar]]
@@ -485,6 +490,53 @@ calcTTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupL
   return(results)
 }
 
+calc1STTest <- function(sample1Index, index1Name, groupList, outcomeVar){
+  require(dplyr)
+  sample1 <- groupList[[sample1Index]][[outcomeVar]]
+
+  results <- t.test(sample1,
+                    mu = .5 # Binary variable
+                    ) %>%
+    broom::tidy() %>%
+    cbind(data.frame(group = index1Name,
+                     outcomeVar = outcomeVar
+                     )) %>%
+    dplyr::mutate(sig = case_when(p.value < .05 ~ "sig",
+                                  TRUE ~ "nonsig")
+
+    )
+
+  return(results)
+}
+
+getNormMuGroup <- function(freshVal, treatVal, season, dataType, nonComply = T){
+  require(data.table)
+
+  data <- switch(dataType,
+                 PB = getDataPB(),
+                 joined = getDataJoined(join = "loose")
+                 )
+
+  # Opt with price beliefs versions of who is a freshman
+  if (dataType == "PB"){
+    group <- data[freshdum == freshVal]
+  } else if (dataType == "joined"){
+    group <- data[freshdum.pb == freshVal]
+    group <- data[treatme == treatVal]
+
+    # Do we want to leave the non-compliant treatment group in the control?
+    if (nonComply == F & treatVal == 0){
+      group <- group[offered == 0]
+    }
+  }
+
+  # season can be "fall"(12) or "both" (fall12 and spring13)
+  if (season == "fall"){
+    group <- group[period == "fall12"]
+  }
+
+  return(group)
+}
 
 
 # data.joined.looser  <- getDataJoined()

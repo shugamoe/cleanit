@@ -64,6 +64,110 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
   new bookstore price (`r nrow(dataPBRaw[newexpratio < .1 | newexpratio > 1.5])` in raw data.)
 * Final size: `r nrow(dataPB)`
 
+### Mu and Sigma Distributions for Treatment and Control Groups
+
+```{r}
+indexKey <- data.table(index = 1:6,
+                           indexName = c(
+                                       # Fall12
+                                       "nonfreshControlFall",
+                                       "freshControlFall",
+                                       "nonfreshTreatFall",
+                                       "freshTreatFall",
+                                       "nonfreshFall",
+                                       "freshFall"
+                                       )
+)
+
+# Data frame with combinations of freshman, treatment group, and seasons included
+groupVarsDf <- list(freshVal = c(0, 1), 
+                  treatVal = c(0, 1),
+                  season = c("fall"),
+                  dataType = c("joined", "PB")
+                  ) %>%
+  do.call(expand.grid, .) %>%
+  mutate_at(vars(season, dataType), as.character)
+groupVarsDf <- groupVarsDf[1:6,] # No treatment values in PB data
+
+# Group that discards non-compliant treatment from control
+groupList <- groupVarsDf %>%
+  pmap(.f = getNormMuGroup, nonComply = F)
+
+
+library(ggplot2)
+(ggplot(groupList[[1]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Joined Data | ", indexKey[1, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[1]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Joined Data | ", indexKey[1, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[2]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Joined Data | ", indexKey[2, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[2]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Joined Data | ", indexKey[2, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[3]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Joined Data | ", indexKey[3, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[3]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Joined Data | ", indexKey[3, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[4]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Joined Data | ", indexKey[4, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[4]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Joined Data | ", indexKey[4, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[5]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Price Beliefs Data | ", indexKey[5, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[5]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Price Beliefs Data | ", indexKey[5, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[6]]) +
+  geom_histogram(aes(normmu)) +
+  labs(title = "Distribution of normmu", subtitle = paste0("Price Beliefs Data | ", indexKey[6, indexName])) +
+  theme_minimal()
+)
+
+(ggplot(groupList[[6]]) +
+  geom_histogram(aes(normsigma)) +
+  labs(title = "Distribution of normsigma", subtitle = paste0("Price Beliefs Data | ", indexKey[6, indexName])) +
+  theme_minimal()
+)
+```
+
 ### Ongoing Price Belief Work
 
 
