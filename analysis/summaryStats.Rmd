@@ -66,7 +66,8 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
 
 ### Mu and Sigma Distributions for Treatment and Control Groups
 
-```{r}
+```{r mu_sigma_distributions, eval = F}
+### Not used, mu_sigma_dists_better used instead
 indexKey <- data.table(index = 1:6,
                            indexName = c(
                                        # Fall12
@@ -165,6 +166,101 @@ library(ggplot2)
   geom_histogram(aes(normsigma)) +
   labs(title = "Distribution of normsigma", subtitle = paste0("Price Beliefs Data | ", indexKey[6, indexName])) +
   theme_minimal()
+)
+```
+
+```{r mu_sigma_dists_better}
+muSigmaPB <- dataPB %>%
+  filter(period == "fall12",
+         is.finite(normmu),
+         is.finite(normsigma)
+         ) %>%
+  mutate(group = case_when(freshdum == 1 ~ "freshFall",
+                           freshdum == 0 ~ "nonfreshFall",
+                           TRUE ~ "ignore")) %>%
+  filter(group != "ignore") %>%
+  group_by(group) %>%
+  add_tally() %>%
+  mutate(n = factor(n, levels = sort(unique(.$n))))
+
+muSigmaJoined <- dataJoinedLoose %>%
+  filter(period == "fall12",
+         is.finite(normmu),
+         is.finite(normsigma)
+         ) %>%
+  mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "freshTreatFall",
+                           freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "freshControlFall",
+                           freshdum.pb == 0 & treatme == 1 & offered == 1 ~ "nonfreshTreatFall",
+                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "nonfreshControlFall",
+                           TRUE ~ "ignore"),
+         freshPB = case_when(freshdum.pb == 1 ~ "Fresh",
+                             freshdum.pb == 0 ~ "nonFresh"
+                             ),
+         treatControl = case_when(treatme == 1 & offered == 1 ~ "Treat",
+                                  treatme == 0 & offered == 0 ~ "Control")
+         ) %>%
+  filter(group != "ignore") %>%
+  group_by(group) %>%
+  add_tally() %>%
+  mutate(n = factor(n, levels = sort(unique(.$n))))
+
+library(ggplot2)
+# Density
+(ggplot(muSigmaPB) +
+  geom_density(aes(normmu, fill = n)) +
+  labs(title = "Distribution of normmu", subtitle = "Price Beliefs Data") +
+  theme_minimal() +
+  facet_wrap(group ~ .)
+)
+
+(ggplot(muSigmaPB) +
+  geom_density(aes(normsigma, fill = n)) +
+  labs(title = "Distribution of normsigma", subtitle = "Price Beliefs Data") +
+  theme_minimal() +
+  facet_wrap(group ~ .)
+)
+
+(ggplot(muSigmaJoined) +
+  geom_density(aes(normmu, fill = n)) +
+  labs(title = "Distribution of normmu", subtitle = "Loose Joined Data") +
+  theme_minimal() +
+  facet_wrap(freshPB ~ treatControl)
+)
+
+(ggplot(arrange(muSigmaJoined, n)) +
+  geom_density(aes(normsigma, fill = n)) +
+  labs(title = "Distribution of normsigma", subtitle = "Loose Joined Data") +
+  theme_minimal() +
+  facet_wrap(freshPB ~ treatControl)
+)
+
+# Histograms
+(ggplot(muSigmaPB) +
+  geom_histogram(aes(normmu, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normmu", subtitle = "Price Beliefs Data | Binwidth = .1") +
+  theme_minimal() +
+  facet_wrap(group ~ .)
+)
+
+(ggplot(muSigmaPB) +
+  geom_histogram(aes(normsigma, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normsigma", subtitle = "Price Beliefs Data | Binwidth = .1") +
+  theme_minimal() +
+  facet_wrap(group ~ .)
+)
+
+(ggplot(muSigmaJoined) +
+  geom_histogram(aes(normmu, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normmu", subtitle = "Loose Joined Data | Binwidth = .1") +
+  theme_minimal() +
+  facet_wrap(freshPB ~ treatControl)
+)
+
+(ggplot(arrange(muSigmaJoined, n)) +
+  geom_histogram(aes(normsigma, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normsigma", subtitle = "Loose Joined Data | Binwidth = .1") +
+  theme_minimal() +
+  facet_wrap(freshPB ~ treatControl)
 )
 ```
 
