@@ -177,13 +177,16 @@ muSigmaPB <- dataPB %>%
          ) %>%
   mutate(group = case_when(freshdum == 1 ~ "freshFall",
                            freshdum == 0 ~ "nonfreshFall",
-                           TRUE ~ "ignore")) %>%
+                           TRUE ~ "ignore"),
+         normsigmasqr = normsigma ^ 2
+         ) %>%
   filter(group != "ignore") %>%
   group_by(group) %>%
   add_tally() %>%
   mutate(n = factor(n, levels = sort(unique(.$n))),
          normmuMedian = median(normmu),
-         normsigmaMedian = median(normsigma)
+         normsigmaMedian = median(normsigma),
+         normsigmasqrMedian = median(normsigmasqr)
          )
 
 muSigmaJoined <- dataJoinedLoose %>%
@@ -200,14 +203,16 @@ muSigmaJoined <- dataJoinedLoose %>%
                              freshdum.pb == 0 ~ "nonFresh"
                              ),
          treatControl = case_when(treatme == 1 & offered == 1 ~ "Treat",
-                                  treatme == 0 & offered == 0 ~ "Control")
+                                  treatme == 0 & offered == 0 ~ "Control"),
+         normsigmasqr = normsigma ^ 2
          ) %>%
   filter(group != "ignore") %>%
   group_by(group) %>%
   add_tally() %>%
   mutate(n = factor(n, levels = sort(unique(.$n))),
          normmuMedian = median(normmu),
-         normsigmaMedian = median(normsigma)
+         normsigmaMedian = median(normsigma),
+         normsigmasqrMedian = median(normsigmasqr)
          )
 
 library(ggplot2)
@@ -230,9 +235,18 @@ library(ggplot2)
   theme(strip.text.y = element_text(angle = 0, hjust = 1))
 )
 
+(ggplot(muSigmaPB) +
+  geom_density(aes(normsigmasqr, fill = n)) +
+  labs(title = "Distribution of normsigmasqr (Fall12 Only, Median Plotted)", subtitle = "Price Beliefs Data") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  geom_vline(aes(xintercept = normsigmasqrMedian), linetype = "dotted") +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
 (ggplot(muSigmaJoined) +
   geom_density(aes(normmu, fill = n)) +
-  labs(title = "Distribution of normmu", subtitle = "Loose Joined Data") +
+  labs(title = "Distribution of normmu (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data") +
   theme_minimal() +
   facet_grid(group ~ .) +
   geom_vline(aes(xintercept = normmuMedian), linetype = "dotted") +
@@ -244,6 +258,15 @@ library(ggplot2)
   labs(title = "Distribution of normsigma (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data") +
   theme_minimal() +
   geom_vline(aes(xintercept = normsigmaMedian), linetype = "dotted") +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
+(ggplot(arrange(muSigmaJoined, n)) +
+  geom_density(aes(normsigmasqr, fill = n)) +
+  labs(title = "Distribution of normsigmasqr (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data") +
+  theme_minimal() +
+  geom_vline(aes(xintercept = normsigmasqrMedian), linetype = "dotted") +
   facet_grid(group ~ .) +
   theme(strip.text.y = element_text(angle = 0, hjust = 1))
 )
@@ -267,6 +290,15 @@ library(ggplot2)
   theme(strip.text.y = element_text(angle = 0, hjust = 1))
 )
 
+(ggplot(muSigmaPB) +
+  geom_histogram(aes(normsigmasqr, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normsigmasqr (Fall12 Only, Median Plotted)", subtitle = "Price Beliefs Data | Binwidth = .1") +
+  geom_vline(aes(xintercept = normsigmasqrMedian), linetype = "dotted") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
 (ggplot(muSigmaJoined) +
   geom_histogram(aes(normmu, fill = n), binwidth = .1) +
   labs(title = "Histogram of normmu (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data | Binwidth = .1") +
@@ -280,6 +312,15 @@ library(ggplot2)
   geom_histogram(aes(normsigma, fill = n), binwidth = .1) +
   labs(title = "Histogram of normsigma (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data | Binwidth = .1") +
   geom_vline(aes(xintercept = normsigmaMedian), linetype = "dotted") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
+(ggplot(arrange(muSigmaJoined, n)) +
+  geom_histogram(aes(normsigmasqr, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normsigmasqr (Fall12 Only, Median Plotted)", subtitle = "Loose Joined Data | Binwidth = .1") +
+  geom_vline(aes(xintercept = normsigmasqrMedian), linetype = "dotted") +
   theme_minimal() +
   facet_grid(group ~ .) +
   theme(strip.text.y = element_text(angle = 0, hjust = 1))

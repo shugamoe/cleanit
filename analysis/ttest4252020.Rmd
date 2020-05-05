@@ -119,7 +119,7 @@ library(ggplot2)
 )
 ```
 
-### Leaving in Non-compliant treatment group
+### Leaving *out* Non-compliant treatment group
 
 ```{r plot_ttest_results_wo_nc_treatment}
 (ggplot(fallTTestResultsDiscardNCT, aes(x=group_compared, y=estimate)) +
