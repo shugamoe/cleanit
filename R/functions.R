@@ -130,7 +130,7 @@ calcPBMuSigma <- function(lb, newlb, ub, newub, newexp){
   require(magrittr)
 
   sigmaNum <- (log(ub) - log(lb))
-  sigmaDenom <- qnorm(newub / 100) - qnorm(newlb / 100)
+  sigmaDenom <- qnorm(1 - (newub / 100)) - qnorm(newlb / 100)
 
   sigma <- sigmaNum/sigmaDenom
   mu <- log(newexp) + log(lb) - sigma * qnorm(newlb / 100)
