@@ -55,6 +55,8 @@ dataJoinedLooser  <- getDataJoined(join = "looser")
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
   - `sigma`: `r nrow(dataPB[is.na(sigma) | is.nan(sigma) | is.infinite(sigma)])`
     observations with `NA`, `NaN`, or `Inf` responses in the final data.
+  - `mu` and `sigma`: `r nrow(dataPB[newlb + newub >= 100])` observations have
+    non-sensical probability responses. (E.g. `newlb + newub >= 100` )
   - Normalized `normmu` also available. (Utilizes `newexpratio` instead of `newexp`.)
 * Removed responses from those with more than 10 semesters of college (`r nrow(dataPBRaw[semesters > 10])` in raw data.)
   * Note that the clean sample data and price beliefs data appear to have
@@ -173,7 +175,8 @@ library(ggplot2)
 muSigmaPB <- dataPB %>%
   filter(period == "fall12",
          is.finite(normmu),
-         is.finite(normsigma)
+         is.finite(normsigma),
+         newlb + newub < 100
          ) %>%
   mutate(group = case_when(freshdum == 1 ~ "freshFall",
                            freshdum == 0 ~ "nonfreshFall",
@@ -192,7 +195,8 @@ muSigmaPB <- dataPB %>%
 muSigmaJoined <- dataJoinedLoose %>%
   filter(period == "fall12",
          is.finite(normmu),
-         is.finite(normsigma)
+         is.finite(normsigma),
+         newlb + newub < 100
          ) %>%
   mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "freshTreatFall",
                            freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "freshControlFall",

@@ -515,10 +515,10 @@ Hash: 709a3da4deef928ab299f4ff52caf66b
 
 Package: workflowr
 Source: CRAN
-Version: 1.6.1
-Hash: 1316def4d43ac25835952dd454090687
+Version: 1.6.2
+Hash: 1881a7b79ed0c393feead0bb28cf5b67
 Requires: callr, fs, getPass, git2r, glue, httpuv, httr, knitr,
-    rmarkdown, rprojroot, rstudioapi, stringr, whisker, yaml
+    rmarkdown, rprojroot, rstudioapi, stringr, whisker, xfun, yaml
 
 Package: xfun
 Source: CRAN
