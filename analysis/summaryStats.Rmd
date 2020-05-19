@@ -505,6 +505,8 @@ ggplot(lnormMuSigmaJoinedMeansFirst %>% transmute(x = rep_len(c(0, 5), 4)), aes(
   labs(title = "Log Normal Distributions using Median of Normalized Mus and Sigmas",
        subtitle = "Medianed First then transformed for Log Normal Distribution", color = "Group") +
   theme_minimal()
+
+lnormMuSigmaJoinedMeansFirst %>% select(-x)
 ```
 
 
