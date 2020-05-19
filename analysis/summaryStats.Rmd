@@ -178,8 +178,8 @@ muSigmaPB <- dataPB %>%
          is.finite(normsigma),
          newlb + newub < 100
          ) %>%
-  mutate(group = case_when(freshdum == 1 ~ "freshFall",
-                           freshdum == 0 ~ "nonfreshFall",
+  mutate(group = case_when(freshdum == 1 ~ "Inexperienced Fall",
+                           freshdum == 0 ~ "Experienced Fall",
                            TRUE ~ "ignore"),
          normsigmasqr = normsigma ^ 2
          ) %>%
@@ -198,15 +198,41 @@ muSigmaJoined <- dataJoinedLoose %>%
          is.finite(normsigma),
          newlb + newub < 100
          ) %>%
-  mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "freshTreatFall",
-                           freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "freshControlFall",
-                           freshdum.pb == 0 & treatme == 1 & offered == 1 ~ "nonfreshTreatFall",
-                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "nonfreshControlFall",
+  mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "Inexperienced Treatment Fall",
+                           freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "Inexperienced Control Fall",
+                           freshdum.pb == 0 & treatme == 1 & offered == 1 ~ "Experienced Treatment Fall",
+                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "Expererienced Control Fall",
                            TRUE ~ "ignore"),
-         freshPB = case_when(freshdum.pb == 1 ~ "Fresh",
-                             freshdum.pb == 0 ~ "nonFresh"
+         freshPB = case_when(freshdum.pb == 1 ~ "Inexperienced",
+                             freshdum.pb == 0 ~ "Experienced"
                              ),
-         treatControl = case_when(treatme == 1 & offered == 1 ~ "Treat",
+         treatControl = case_when(treatme == 1 & offered == 1 ~ "Treatment",
+                                  treatme == 0 & offered == 0 ~ "Control"),
+         normsigmasqr = normsigma ^ 2
+         ) %>%
+  filter(group != "ignore") %>%
+  group_by(group) %>%
+  add_tally() %>%
+  mutate(n = factor(n, levels = sort(unique(.$n))),
+         normmuMean = mean(normmu),
+         normsigmaMean = mean(normsigma),
+         normsigmasqrMean = mean(normsigmasqr)
+         )
+
+muSigmaJoinedFallAndSpring <- dataJoinedLoose %>%
+  filter(is.finite(normmu),
+         is.finite(normsigma),
+         newlb + newub < 100
+         ) %>%
+  mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "Inexperienced Treatment Fall",
+                           freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "Inexperienced Control Fall",
+                           freshdum.pb == 0 & treatme == 1 & offered == 1 ~ "Experienced Treatment Fall",
+                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "Expererienced Control Fall",
+                           TRUE ~ "ignore"),
+         freshPB = case_when(freshdum.pb == 1 ~ "Inexperienced",
+                             freshdum.pb == 0 ~ "Experienced"
+                             ),
+         treatControl = case_when(treatme == 1 & offered == 1 ~ "Treatment",
                                   treatme == 0 & offered == 0 ~ "Control"),
          normsigmasqr = normsigma ^ 2
          ) %>%
@@ -227,7 +253,8 @@ library(ggplot2)
   theme_minimal() +
   facet_grid(group ~ .) +
   geom_vline(aes(xintercept = normmuMean), linetype = "dotted") +
-  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+  theme(strip.text.y = element_text(angle = 0, hjust = 1)) +
+  scale_x_continuous(limits = c(-1, 1))
 )
 
 (ggplot(muSigmaPB) +
@@ -236,7 +263,8 @@ library(ggplot2)
   theme_minimal() +
   facet_grid(group ~ .) +
   geom_vline(aes(xintercept = normsigmaMean), linetype = "dotted") +
-  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+  theme(strip.text.y = element_text(angle = 0, hjust = 1)) +
+  scale_x_continuous(limits = c(0, 1))
 )
 
 # (ggplot(muSigmaPB) +
@@ -262,6 +290,24 @@ library(ggplot2)
 (ggplot(arrange(muSigmaJoined, n)) +
   geom_density(aes(normsigma, fill = n)) +
   labs(title = "Distribution of normsigma (Fall12 Only, Mean Plotted)", subtitle = "Loose Joined Data") +
+  theme_minimal() +
+  geom_vline(aes(xintercept = normsigmaMean), linetype = "dotted") +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
+(ggplot(muSigmaJoinedFallAndSpring) +
+  geom_density(aes(normmu, fill = n)) +
+  labs(title = "Distribution of normmu (Fall12 + Spring13, Mean Plotted)", subtitle = "Loose Joined Data") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  geom_vline(aes(xintercept = normmuMean), linetype = "dotted") +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
+(ggplot(arrange(muSigmaJoinedFallAndSpring, n)) +
+  geom_density(aes(normsigma, fill = n)) +
+  labs(title = "Distribution of normsigma (Fall12 + Spring13, Mean Plotted)", subtitle = "Loose Joined Data") +
   theme_minimal() +
   geom_vline(aes(xintercept = normsigmaMean), linetype = "dotted") +
   facet_grid(group ~ .) +
@@ -325,6 +371,23 @@ library(ggplot2)
   theme(strip.text.y = element_text(angle = 0, hjust = 1))
 )
  
+(ggplot(muSigmaJoinedFallAndSpring) +
+  geom_histogram(aes(normmu, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normmu (Fall12 + Spring13, Mean Plotted)", subtitle = "Loose Joined Data | Binwidth = .1") +
+  geom_vline(aes(xintercept = normmuMean), linetype = "dotted") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
+
+(ggplot(arrange(muSigmaJoinedFallAndSpring, n)) +
+  geom_histogram(aes(normsigma, fill = n), binwidth = .1) +
+  labs(title = "Histogram of normsigma (Fall12 + Spring13, Mean Plotted)", subtitle = "Loose Joined Data | Binwidth = .1") +
+  geom_vline(aes(xintercept = normsigmaMean), linetype = "dotted") +
+  theme_minimal() +
+  facet_grid(group ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 1))
+)
 # (ggplot(arrange(muSigmaJoined, n)) +
 #   geom_histogram(aes(normsigmasqr, fill = n), binwidth = .25) +
 #   labs(title = "Histogram of normsigmasqr (Fall12 Only, Mean Plotted)", subtitle = "Loose Joined Data | Binwidth = .25") +
@@ -336,6 +399,114 @@ library(ggplot2)
 #   scale_y_continuous(limits = c(0, 50))
 # )
 ```
+
+### Lognormal Distributions from Data
+
+```{r mu_sigma_lnorm_dists}
+# Mu and sigmas calculated are for the normal distribution, convert them to mu/sigmas for lnorm distribution  
+# mu_lnorm = exp(mu_norm + .5 sigma_norm ^2)
+# sigma_lnorm = sqrt((exp(sigma_norm ^ 2) - 1) * exp(2mu_norm + sigma_norm ^2))
+lnormMuSigmaJoined <- muSigmaJoined %>%
+  mutate(mu_lnorm = exp(normmu + .5 * (normsigma ^ 2)),
+         sigma_lnorm = sqrt((exp(normsigma ^ 2) - 1) * exp(2 * normmu + (normsigma ^ 2)))
+         ) %>%
+  group_by(group) %>%
+  summarise(mean_mu_lnorm = mean(mu_lnorm),
+            mean_sigma_lnorm = mean(sigma_lnorm),
+            median_mu_lnorm = median(mu_lnorm),
+            median_sigma_lnorm = median(sigma_lnorm)
+            ) %>%
+  mutate(x = rep_len(c(0, 10), 4))
+
+lnormMuSigmaJoinedMeansFirst <- muSigmaJoined %>%
+  group_by(group) %>%
+  summarise(mean_normmu = mean(normmu),
+            mean_normsigma = mean(normsigma),
+            median_normmu = median(normmu),
+            median_normsigma = median(normsigma)
+            ) %>%
+  mutate(mean_mu_lnorm = exp(mean_normmu + .5 * (mean_normsigma ^ 2)),
+         mean_sigma_lnorm = sqrt((exp(mean_normsigma ^ 2) - 1) * exp(2 * mean_normmu + (mean_normsigma ^ 2))),
+         median_mu_lnorm = exp(median_normmu + .5 * (median_normsigma ^ 2)),
+         median_sigma_lnorm = sqrt((exp(median_normsigma ^ 2) - 1) * exp(2 * median_normmu + (median_normsigma ^ 2))),
+         ) %>%
+  mutate(x = rep_len(c(0, 10), 4))
+
+
+# Plots of transformed then mean/medianed mus/sigmas
+ggplot(lnormMuSigmaJoined %>% transmute(x = rep_len(c(0, 8), 4)), aes(x, color = group)) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[1], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[1])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[4])) +
+  labs(title = "Log Normal Distributions using Mean of Normalized Mus and Sigmas",
+       subtitle = "Converted to Log Normal Mus and Sigmas First", color = "Group") +
+  theme_minimal()
+
+ggplot(lnormMuSigmaJoined %>% transmute(x = rep_len(c(0, 5), 4)), aes(x, color = group)) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[1], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[1])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[4])) +
+  labs(title = "Log Normal Distributions using Median of Normalized Mus and Sigmas",
+       subtitle = "Converted to Log Normal Mus and Sigmas First", color = "Group") +
+  theme_minimal()
+
+
+lnormMuSigmaJoined %>% select(-x)
+
+# Plots of meaned/medianed then transformed mus/sigmas
+ggplot(lnormMuSigmaJoinedMeansFirst %>% transmute(x = rep_len(c(0, 8), 4)), aes(x, color = group)) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[1], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[1])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
+                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[4])) +
+  labs(title = "Log Normal Distributions using Mean of Normalized Mus and Sigmas",
+       subtitle = "Meaned First then transformed for Log Normal Distribution", color = "Group") +
+  theme_minimal()
+
+ggplot(lnormMuSigmaJoinedMeansFirst %>% transmute(x = rep_len(c(0, 5), 4)), aes(x, color = group)) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[1], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[1])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
+                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[4])) +
+  labs(title = "Log Normal Distributions using Median of Normalized Mus and Sigmas",
+       subtitle = "Medianed First then transformed for Log Normal Distribution", color = "Group") +
+  theme_minimal()
+```
+
 
 ### Ongoing Price Belief Work
 
