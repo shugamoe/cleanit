@@ -481,35 +481,35 @@ lnormMuSigmaJoined %>% select(-x)
 
 # Plots of meaned/medianed then transformed mus/sigmas
 ggplot(lnormMuSigmaJoinedMeansFirst %>% transmute(x = rep_len(c(0, 8), 4)), aes(x, color = group)) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
-                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[1], 
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[1]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$mean_mu_lnorm[1], 
                                                    sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[1])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
-                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[2], 
-                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[2])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
-                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[3], 
-                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[3])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
-                args = list(meanlog = lnormMuSigmaJoined$mean_mu_lnorm[4], 
-                                                   sdlog = lnormMuSigmaJoined$mean_sigma_lnorm[4])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[2]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$mean_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$mean_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[3]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$mean_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$mean_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[4]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$mean_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$mean_sigma_lnorm[4])) +
   labs(title = "Log Normal Distributions using Mean of Normalized Mus and Sigmas",
        subtitle = "Meaned First then transformed for Log Normal Distribution", color = "Group") +
   theme_minimal()
 
 ggplot(lnormMuSigmaJoinedMeansFirst %>% transmute(x = rep_len(c(0, 5), 4)), aes(x, color = group)) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[1]),
-                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[1], 
-                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[1])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[2]),
-                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[2], 
-                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[2])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[3]),
-                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[3], 
-                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[3])) +
-  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoined$group[4]),
-                args = list(meanlog = lnormMuSigmaJoined$median_mu_lnorm[4], 
-                                                   sdlog = lnormMuSigmaJoined$median_sigma_lnorm[4])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[1]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$median_mu_lnorm[1], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$median_sigma_lnorm[1])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[2]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$median_mu_lnorm[2], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$median_sigma_lnorm[2])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[3]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$median_mu_lnorm[3], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$median_sigma_lnorm[3])) +
+  stat_function(fun = dlnorm, aes(color = lnormMuSigmaJoinedMeansFirst$group[4]),
+                args = list(meanlog = lnormMuSigmaJoinedMeansFirst$median_mu_lnorm[4], 
+                                                   sdlog = lnormMuSigmaJoinedMeansFirst$median_sigma_lnorm[4])) +
   labs(title = "Log Normal Distributions using Median of Normalized Mus and Sigmas",
        subtitle = "Medianed First then transformed for Log Normal Distribution", color = "Group") +
   theme_minimal()
