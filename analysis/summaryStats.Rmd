@@ -201,7 +201,7 @@ muSigmaJoined <- dataJoinedLoose %>%
   mutate(group = case_when(freshdum.pb == 1 & treatme == 1 & offered == 1 ~ "Inexperienced Treatment Fall",
                            freshdum.pb == 1 & treatme == 0 & offered == 0 ~ "Inexperienced Control Fall",
                            freshdum.pb == 0 & treatme == 1 & offered == 1 ~ "Experienced Treatment Fall",
-                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "Expererienced Control Fall",
+                           freshdum.pb == 0 & treatme == 0 & offered == 0 ~ "Experienced Control Fall",
                            TRUE ~ "ignore"),
          freshPB = case_when(freshdum.pb == 1 ~ "Inexperienced",
                              freshdum.pb == 0 ~ "Experienced"
