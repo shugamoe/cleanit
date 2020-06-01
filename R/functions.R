@@ -538,6 +538,32 @@ getNormMuGroup <- function(freshVal, treatVal, season, dataType, nonComply = T){
   return(group)
 }
 
+# Function for doing t-tests with google doc specifications
+# https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit#gid=0
+calcSpec2STTest <- function(sample1Name, sample2Name, masterDf, outcomeVar){
+  require(dplyr)
+  sample1vec <- masterDf %>%
+    filter(name == sample1Name) %>%
+    pull(outcomeVar)
+  sample2vec <- masterDf %>%
+    filter(name == sample2Name) %>%
+    pull(outcomeVar)
+  print(summary(sample1vec))
+  print(summary(sample2vec))
+
+  results <- t.test(sample1vec, sample2vec) %>%
+    broom::tidy() %>%
+    cbind(data.frame(group_compared = glue::glue("{sample1Name} - {sample2Name}"),
+                     outcomeVar = outcomeVar
+                     )) %>%
+    dplyr::mutate(sig = case_when(p.value < .05 ~ "sig",
+                                  TRUE ~ "nonsig")
+
+    )
+
+  return(results)
+}
+
 
 # data.joined.looser  <- getDataJoined()
 # data.joined.loose  <- getDataJoined(join = "loose")

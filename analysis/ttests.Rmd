@@ -1,0 +1,636 @@
+---
+title: "T-Tests"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+<!-- author: "Julian McClellan" -->
+<!-- date: "2/something/2020" -->
+<!-- output:  -->
+<!-- html_document: -->
+<!-- toc: true -->
+
+```{r setup, include=FALSE}
+source("R/functions.R")
+source("R/packages.R")
+knitr::opts_chunk$set(echo = F, message = F, warning=F)
+options(scipen=999) # No scientific notation
+```
+
+```{r define_groups}
+# Data frame with combinations of freshman, treatment group, and seasons included
+groupVarsDf <- list(freshVal = c(0, 1), 
+                  treatVal = c(0, 1),
+                  season = c("fall", "all")) %>%
+  do.call(expand.grid, .)
+
+# List of all the different data.frames of interest from the combinations above.
+groupList <- groupVarsDf %>%
+  pmap(.f = getTTestGroup)
+
+# Group that discards non-compliant treatment from control
+groupListDiscardNCT <- groupVarsDf %>%
+  pmap(.f = getTTestGroup, nonComply = F)
+
+indexKey <- data.table(sample1Index = 1:8,
+                           sample2Index = 1:8,
+                           indexName = c(
+                                       # Fall12
+                                       "Experienced Control",
+                                       "Inexperienced Control",
+                                       "Experienced Treated",
+                                       "Inexperienced Treated",
+                                       # Fall12 + Spring 13 
+                                       "nonfreshControlAll",
+                                       "freshControlAll",
+                                       "nonfreshTreatAll",
+                                       "freshTreatAll"))
+
+# Please observe an abominable combination of dplyr and data.table
+
+# DFs parameterizing calc2STTest function
+fallParams <- list(sample1Index = 1:4,
+                        sample2Index = 1:4) %>%
+  do.call(expand.grid, .) %>%
+  dplyr::filter(sample1Index < sample2Index) %>%
+  as.data.table() %>%
+  merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
+  merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+
+# Onlinechkdum only, only 3 out of 6 groups (from 5/15/2020 meeting)
+# Manually make this to do what Uyen wants
+                                       # Fall12
+                                       # "Experienced Control",
+                                       # "Inexperienced Control",
+                                       # "Experienced Treat",
+                                       # "Inexperienced Treat",
+fallParamsChkDumOnly <- tibble(
+  sample1Index = c(2, 2, 4),
+  sample2Index = c(1, 4, 1),
+  outcomeVar = rep("onlinechkdum", 3)
+  ) %>%
+  merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
+  merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
+  arrange(sample1Index)
+
+
+
+allParams <- list(sample1Index = 5:8,
+                        sample2Index = 5:8) %>%
+  do.call(expand.grid, .) %>%
+  dplyr::filter(sample1Index < sample2Index) %>%
+  as.data.table() %>%
+  merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
+  merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+
+# Leave non-compliant treatment group in the control group (treatment == 0 and offered == 1)
+fallTTestResults <- fallParams %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupList)
+
+allTTestResults <- allParams %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupList)
+
+# 
+fallTTestResultsChkDumOnly <- fallParamsChkDumOnly %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupList)
+  
+
+# Discard non-compliant treatment group from the control group
+fallTTestResultsDiscardNCT <- fallParams %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupListDiscardNCT)
+
+allTTestResultsDiscardNCT <- allParams %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupListDiscardNCT)
+```
+
+## 2-Sample T-Tests
+
+### Leaving in Non-compliant treatment group
+
+```{r plot_ttest_results_with_nc_treatment}
+library(ggplot2)
+(ggplot(fallTTestResults, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+
+(ggplot(allTTestResults, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 + Spring13", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+
+### Leaving *out* Non-compliant treatment group
+
+```{r plot_ttest_results_wo_nc_treatment}
+(ggplot(fallTTestResultsDiscardNCT, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+
+(ggplot(allTTestResultsDiscardNCT, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 + Spring13", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+
+### Graphs for Paper
+```{r graph_for_paper}
+(ggplot(fallTTestResultsChkDumOnly, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "95% CI | Assume unequal variance",
+       fill = "Significance", y = "Estimated Difference (Assumed 0)", x = "Group Compared") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+
+## Means tests
+
+```{r get_means_tests_params_and_results}
+# Get means with .95 conf intervals of certain outcome vars for fall12 with the
+# new control group specification (discard non-compliant treatment)
+fallMeansParams <- list(sample1Index = 1:4,
+                        outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum")
+                        ) %>%
+  do.call(expand.grid, .) %>%
+  inner_join(indexKey %>% select(-sample2Index)) %>%
+  rename(index1Name = indexName) %>%
+  mutate(outcomeVar = as.character(outcomeVar))
+
+fallMeansResults <- fallMeansParams %>%
+  purrr::pmap_df(.f = calc1STTest, groupList = groupListDiscardNCT)
+
+(ggplot(fallMeansResults, aes(x=group, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "Welch 1-Sample T-Test Results | Fall12", subtitle = "95% CI") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  geom_hline(yintercept = .5, linetype = "dotted") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+
+## Mu Sigma T-Tests
+
+[Specifications detailed here.](https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit?usp=sharing)
+
+
+```{r create_spec_groups}
+dataCS <- getDataCS()
+# Filter out ridiculous normmu values
+dataPB <- getDataPB() %>%
+  filter(newlb + newub < 100)
+
+# Find Emails that were in the fall12, or spring13, or both clean sample periods
+# Use min and group by email to count people as 
+emailFall12Key <- dataCS %>%
+  filter(period == "fall12") %>%
+  select(email, freshdum, treatme, offered) %>%
+  group_by(email, freshdum) %>%
+  summarise(treatme = min(sum(treatme), 1), offered = mean(offered)) %>%
+  distinct()
+
+emailSpring13Key <- dataCS %>%
+  filter(period == "spring13") %>%
+  select(email, freshdum, treatme, offered) %>%
+  group_by(email, freshdum) %>%
+  summarise(treatme = min(sum(treatme), 1), offered = mean(offered)) %>%
+  distinct()
+
+# Every specifications for (A-J)(1-2)
+# Not super efficient implementation. Thanks small data
+# Vim practice
+fullSpecKey <- list(
+  # A
+  # In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Inexperienced	Control
+  # A1 Should be nobody since all of spring13's clean sample have offered == 1
+  A1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    # Use clean sample freshman
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "A1")
+  ,
+  A2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "A2")
+  ,
+  # B
+  # In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Inexperienced	Treated
+  B1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 1, treatme == 1) %>%
+    mutate(group = "B1")
+  ,
+  B2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 1, treatme == 1) %>%
+    mutate(group = "B2")
+  ,
+  # In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Experienced	Control
+  C1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "C1")
+  ,
+  C2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "C2")
+    
+  ,
+  # In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Experienced	Treated
+  D1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 1, treatme == 1) %>%
+    mutate(group = "D1")
+  ,
+  D2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      semi_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 1, treatme == 1) %>%
+    mutate(group = "D2")
+  ,
+  # In Fall 2012 Clean Sample	Not In Spring 2013 Clean Sample	Inexperienced	Control
+  E1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "E1")
+  ,
+  E2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "E2")
+  ,
+  # In Fall 2012 Clean Sample	Not In Spring 2013 Clean Sample	Inexperienced	Treated
+  F1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 1, treatme == 1) %>%
+    mutate(group = "F1")
+  ,
+  F2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 1, treatme == 1) %>%
+    mutate(group = "F2")
+  ,
+  # In Fall 2012 Clean Sample	Not In Spring 2013 Clean Sample	Experienced	Control
+  G1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "G1")
+  ,
+  G2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "G2")
+  ,
+  # In Fall 2012 Clean Sample	Not In Spring 2013 Clean Sample	Experienced	Treated
+  H1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 1, treatme == 1) %>%
+    mutate(group = "H1")
+  ,
+  H2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailFall12Key,
+           emailSpring13Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 1, treatme == 1) %>%
+    mutate(group = "H2")
+  ,
+  # Not In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Inexperienced	Only Control Groups
+  I1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailSpring13Key,
+           emailFall12Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "I1")
+  ,
+  I2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailSpring13Key,
+           emailFall12Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 1, offered == 0, treatme == 0) %>%
+    mutate(group = "I2")
+  ,
+  # Not In Fall 2012 Clean Sample	In Spring 2013 Clean Sample	Experienced	Only Control Groups
+  J1 = dataPB %>% 
+    filter(period == "fall12") %>%
+    inner_join(
+      anti_join(emailSpring13Key,
+           emailFall12Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "J1")
+  ,
+  J2 = dataPB %>% 
+    filter(period == "spring13") %>%
+    inner_join(
+      anti_join(emailSpring13Key,
+           emailFall12Key, by = "email"),
+      by = "email",
+      suffix = c(".pb", ".cs")
+    ) %>%
+    filter(freshdum.cs == 0, offered == 0, treatme == 0) %>%
+    mutate(group = "J2")
+)
+
+# Create Specification 1
+spec1InexperControl <- bind_rows(
+ fullSpecKey$A1,
+ fullSpecKey$E1
+) %>%
+  mutate(spec = 1,
+         name = "Inexperienced Control"
+         )
+
+spec1InexperTreated <- bind_rows(
+ fullSpecKey$B2,
+ fullSpecKey$F1
+) %>%
+  mutate(spec = 1,
+         name = "Inexperienced Treated"
+         )
+
+
+spec1ExperControl <- bind_rows(
+ fullSpecKey$C1,
+ fullSpecKey$C2,
+ fullSpecKey$G1
+) %>%
+  mutate(spec = 1,
+         name = "Experienced Control"
+         )
+
+
+spec1ExperTreated <- bind_rows(
+ fullSpecKey$D1,
+ fullSpecKey$D2,
+ fullSpecKey$H1,
+ fullSpecKey$H2
+) %>%
+  mutate(spec = 1,
+         name = "Experienced Treated"
+         )
+
+spec1Full <- bind_rows(spec1ExperControl,
+                       spec1ExperTreated,
+                       spec1InexperControl,
+                       spec1InexperTreated)
+
+# Create Specification 2
+spec2InexperControl <- bind_rows(
+ fullSpecKey$A1,
+ fullSpecKey$A2,
+ fullSpecKey$E1,
+ fullSpecKey$E2,
+ fullSpecKey$I1,
+ fullSpecKey$I2,
+) %>%
+  mutate(spec = 2,
+         name = "Inexperienced Control"
+         )
+
+spec2InexperTreated <- bind_rows(
+ fullSpecKey$B1,
+ fullSpecKey$B2,
+ fullSpecKey$F1,
+ fullSpecKey$F2
+) %>%
+  mutate(spec = 2,
+         name = "Inexperienced Treated"
+         )
+
+
+spec2ExperControl <- bind_rows(
+ fullSpecKey$C1,
+ fullSpecKey$C2,
+ fullSpecKey$G1,
+ fullSpecKey$G2,
+ fullSpecKey$J1,
+ fullSpecKey$J2
+) %>%
+  mutate(spec = 2,
+         name = "Experienced Control"
+         )
+
+
+spec2ExperTreated <- bind_rows(
+ fullSpecKey$D1,
+ fullSpecKey$D2,
+ fullSpecKey$H1,
+ fullSpecKey$H2
+) %>%
+  mutate(spec = 2,
+         name = "Experienced Treated"
+         )
+
+spec2Full <- bind_rows(spec2ExperControl,
+                       spec2ExperTreated,
+                       spec2InexperControl,
+                       spec2InexperTreated)
+```
+
+```{r calc_spec_t_tests_and_plot}
+# get Mu and Sigmas for the four groups with these two classifications.
+# do a t-test on the Mus for the following pairs
+# Inexperienced control vs Inexperienced treated
+# Inexperienced treated vs Experienced control
+# Experienced control vs. Experienced treated
+specTestVars <- tibble(sample1Name = c("Inexperienced Control", 
+                                        "Inexperienced Treated",
+                                        "Experienced Control"),
+                        sample2Name = c("Inexperienced Treated",
+                                        "Experienced Control",
+                                        "Experienced Treated")) %>%
+  mutate(outcomeVar = "normmu")
+
+spec1Results <- specTestVars %>%
+  pmap_dfr(.f = calcSpec2STTest, masterDf = spec1Full)
+
+spec2Results <- specTestVars %>%
+  pmap_dfr(.f = calcSpec2STTest, masterDf = spec2Full)
+
+# Plot
+# Spec1
+(ggplot(spec1Results, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "2-Sample T-Test Results | Specification 1", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+
+# Spec2
+(ggplot(spec2Results, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  labs(title = "2-Sample T-Test Results | Specification 2", subtitle = "95% CI | Assume unequal variance") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```

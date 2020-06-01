@@ -9,8 +9,8 @@ navbar:
     href: summaryStats.html
   - text: Loose Join Drilldown
     href: looseJoinDrilldown.html
-  - text: 4/25/2020 t-tests
-    href: ttest4252020.html
+  - text: T-tests
+    href: ttests.html
   - text: About
     href: about.html
   - text: License
