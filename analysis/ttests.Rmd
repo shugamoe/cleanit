@@ -220,7 +220,7 @@ fallMeansResults <- fallMeansParams %>%
 )
 ```
 
-## Mu Sigma T-Tests
+## Mu Sigma T-Tests | Specifications 1 and 2
 
 [Specifications detailed here.](https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit?usp=sharing)
 
