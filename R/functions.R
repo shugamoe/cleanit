@@ -548,8 +548,6 @@ calcSpec2STTest <- function(sample1Name, sample2Name, masterDf, outcomeVar){
   sample2vec <- masterDf %>%
     filter(name == sample2Name) %>%
     pull(outcomeVar)
-  print(summary(sample1vec))
-  print(summary(sample2vec))
 
   results <- t.test(sample1vec, sample2vec) %>%
     broom::tidy() %>%
