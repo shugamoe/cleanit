@@ -472,12 +472,12 @@ getTTestGroup <- function(freshVal, treatVal, season, nonComply = T){
   return(group)
 }
 
-calc2STTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar){
+calc2STTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar, conf = .95){
   require(dplyr)
   sample1 <- groupList[[sample1Index]][[outcomeVar]]
   sample2 <- groupList[[sample2Index]][[outcomeVar]]
 
-  results <- t.test(sample1, sample2) %>%
+  results <- t.test(sample1, sample2, conf.level = conf) %>%
     broom::tidy() %>%
     cbind(data.frame(group_compared = glue::glue("{index1Name} - {index2Name}"),
                      outcomeVar = outcomeVar

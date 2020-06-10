@@ -95,9 +95,12 @@ fallTTestResults <- fallParams %>%
 allTTestResults <- allParams %>%
   purrr::pmap_df(.f = calc2STTest, groupList = groupList)
 
-# 
+# .95
 fallTTestResultsChkDumOnly <- fallParamsChkDumOnly %>%
   purrr::pmap_df(.f = calc2STTest, groupList = groupList)
+# .90 Conf
+fallTTestResultsChkDumOnly90 <- fallParamsChkDumOnly %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupList, conf = .90)
   
 
 # Discard non-compliant treatment group from the control group
@@ -180,6 +183,20 @@ library(ggplot2)
                 ) +
   geom_hline(yintercept = 0, linetype = "dotted") +
   labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "95% CI | Assume unequal variance",
+       fill = "Significance", y = "Estimated Difference (Assumed 0)", x = "Group Compared") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+(ggplot(fallTTestResultsChkDumOnly90, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "90% CI | Assume unequal variance",
        fill = "Significance", y = "Estimated Difference (Assumed 0)", x = "Group Compared") +
   facet_wrap(. ~ outcomeVar) +
   theme_minimal() +
