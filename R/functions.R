@@ -482,7 +482,7 @@ calc2STTest <- function(sample1Index, sample2Index, index1Name, index2Name, grou
     cbind(data.frame(group_compared = glue::glue("{index1Name} - {index2Name}"),
                      outcomeVar = outcomeVar
                      )) %>%
-    dplyr::mutate(sig = case_when(p.value < .05 ~ "sig",
+    dplyr::mutate(sig = case_when(p.value < (1 - conf) ~ "sig",
                                   TRUE ~ "nonsig")
 
     )
