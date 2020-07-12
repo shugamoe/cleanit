@@ -11,6 +11,8 @@ navbar:
     href: looseJoinDrilldown.html
   - text: T-tests
     href: ttests.html
+  - text: Compare Distributions
+    href: compare_distributions.html
   - text: About
     href: about.html
   - text: License

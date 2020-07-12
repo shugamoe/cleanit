@@ -1,0 +1,76 @@
+---
+title: "Compare Distributions"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+<!-- author: "Julian McClellan" -->
+<!-- date: "2/something/2020" -->
+<!-- output:  -->
+<!-- html_document: -->
+<!-- toc: true -->
+
+```{r setup, include=FALSE}
+source("R/functions.R")
+source("R/packages.R")
+knitr::opts_chunk$set(echo = F, message = F, warning=F)
+options(scipen=999) # No scientific notation
+```
+
+```{r, create_specifications}
+source("R/create_specifications.R")
+```
+
+```{r calc_mean_comparison, include=F}
+# Inexperienced Control vs. Experienced Control
+# Inexperienced Control vs. Inexperienced Treated
+# Inexperienced Treated vs. Experienced Control
+# Experienced Control vs. Experienced Treated
+specMeanTestVars <- tibble(sample1Name = c("Inexperienced Control",
+                                        "Inexperienced Control", 
+                                        "Inexperienced Treated",
+                                        "Experienced Control"),
+                        sample2Name = c("Experienced Control",
+                                        "Inexperienced Treated",
+                                        "Experienced Control",
+                                        "Experienced Treated")) %>%
+  tidyr::crossing(spec = c(1, 2), vecSize = 1000)
+
+specMeanResults <- specMeanTestVars %>%
+  pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "means")
+```
+
+# Mean Results
+
+```{r display_mean_comp_results}
+library(kableExtra)
+
+knitr::kable(specMeanResults, "html", digits = 5) %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+```
+
+```{r calc_draws_comparison}
+specDrawsTestVars <- specMeanTestVars %>%
+  tidyr::crossing(draws = c(100)) #, 1000, 10000)) # Jesus this takes so long
+
+drawResultsPath <- "data/specDrawsResults_100.rds"
+if (!file.exists(drawResultsPath)){
+  specDrawsResults <- specDrawsTestVars %>%
+    pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "draws")
+  saveRDS(specDrawsResults, drawResultsPath)
+} else {
+  specDrawsResults <- readRDS(drawResultsPath)
+}
+```
+
+# Draws Results
+
+```{r display_draws_comparison}
+knitr::kable(specDrawsResults, "html", digits = 5) %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+```

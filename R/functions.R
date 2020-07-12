@@ -109,8 +109,8 @@ getDataPB  <- function(dataDir = "data/"){
     ]
 
   # Create mu and sigma columns
-  dataPB[,c("mu", "sigma") := calcPBMuSigma(lb, newlb, ub, newub, newexp), by = pb.id]
-  dataPB[,c("normmu", "normsigma") := calcPBMuSigma(lb, newlb, ub, newub, newexpratio), by = pb.id]
+  dataPB[,c("mu", "sigma", "mu_lnorm", "sigma_lnorm") := calcPBMuSigma(lb, newlb, ub, newub, newexp), by = pb.id]
+  dataPB[,c("normmu", "normsigma", "normmu_lnorm", "normsigma_lnorm") := calcPBMuSigma(lb, newlb, ub, newub, newexpratio), by = pb.id]
 
   # Remove blank emails
   dataPB  <- dataPB[email != ""]
@@ -134,7 +134,9 @@ calcPBMuSigma <- function(lb, newlb, ub, newub, newexp){
 
   sigma <- sigmaNum/sigmaDenom
   mu <- log(newexp) + log(lb) - sigma * qnorm(newlb / 100)
-  return(list(mu, sigma))
+  mu_lnorm <- exp(mu + .5 * (sigma ^ 2))
+  sigma_lnorm <- sqrt((exp(sigma ^ 2) - 1) * exp(2 * mu + (sigma ^ 2)))
+  return(list(mu, sigma, mu_lnorm, sigma_lnorm))
 }
 
 # Example use. When mu and sigma calculations are finished use this style of func
@@ -560,6 +562,123 @@ calcSpec2STTest <- function(sample1Name, sample2Name, masterDf, outcomeVar){
     )
 
   return(results)
+}
+
+getLNormDraws <- function(name, draws, spec, masterDf, mode = "write", startSeed = 26){
+  require(dplyr)
+  require(glue)
+  require(readr)
+  require(purrr)
+
+  possibleFp  <- glue("data/lnorm_draws/spec_{spec}_{name}_{draws}.csv")
+  if (file.exists(possibleFp)){
+    if (mode == "write"){
+      return()
+    } else {
+      return(read_csv(possibleFp))
+    }
+  }
+
+  filterDf <- masterDf %>%
+    dplyr::filter(name == !!name & spec == !!spec) %>%
+    mutate(seed = startSeed:(nrow(.) + startSeed - 1)) %>%
+    select(normmu_lnorm, normsigma_lnorm, seed)
+
+  simluateLnorm <- function(normmu_lnorm, normsigma_lnorm, seed){
+    set.seed(seed)
+    obs <- rlnorm(draws, normmu_lnorm, normsigma_lnorm)
+    rval <- list(obs = obs, normmu_lnorm = normmu_lnorm, normsigma_lnorm = normsigma_lnorm)
+    return(rval)
+  }
+
+  returnDf  <- filterDf %>%
+    pmap_dfr(.f = simluateLnorm)
+  returnLen <- nrow(returnDf)
+  filterLen <- nrow(filterDf)
+  message(glue("Spec {spec} {name}, {draws} draws | {returnLen} obs for {filterLen} distributions"))
+
+  if (mode == "write"){
+    write_csv(returnDf, possibleFp)
+  } else {
+    return(returnDf)
+  }
+}
+
+# Function to create all the required draws (save space)
+calcAndCacheAllDraws <- function(masterDf){
+  require(tidyr)
+  require(purrr)
+  require(dplyr)
+
+  paramDf <- data.frame(name = c("Experienced Control", "Experienced Treated",
+                                 "Inexperienced Control", "Inexperienced Treated")) %>%
+    crossing(spec = c(1, 2), draws = c(100, 1000)) #, 10000))
+
+  paramDf %>%
+    pwalk(.f = getLNormDraws, masterDf = masterDf)
+  list.files("data/lnorm_draws/")
+}
+
+compareDistributions <- function(sample1Name, sample2Name, masterDf, mode,
+                                 spec, vecSize = 1000, draws = 100, outcomeVar = "normmu_lnorm",
+                                 conf = .95, startSeed = 26){
+  require(dplyr)
+  require(kSamples)
+  require(purrr)
+
+  if (mode == "means"){
+    sample1vec <- masterDf %>%
+      filter(name == sample1Name, spec == !!spec) %>%
+      pull(outcomeVar) %>%
+      sample(size = vecSize, replace = T)
+    sample2vec <- masterDf %>%
+      filter(name == sample2Name, spec == !!spec) %>%
+      pull(outcomeVar) %>%
+      sample(size = vecSize, replace = T)
+
+    results <- ad.test(sample1vec, sample2vec)
+    rval <- results$ad[1,] %>% # Results from continuous population
+      broom::tidy() %>%
+      tidyr::pivot_wider(names_from = names, values_from = x) %>%
+      rename(asympt.p.value = ` asympt. P-value`) %>%
+      cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                       outcomeVar = outcomeVar,
+                       spec = spec,
+                       sample1Name = sample1Name,
+                       sample1N = results$ns[1],
+                       sample2Name = sample2Name,
+                       sample2N = results$ns[2]
+                       )) %>%
+      mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
+                             TRUE ~ "nonsig"))
+  } else if (mode == "draws") {
+    message(glue::glue("Comparing {sample1Name} ~ {sample2Name} | {draws} draws . . ."))
+
+    sample1vec <- getLNormDraws(sample1Name, draws, spec, masterDf = NULL, mode = "read") %>%
+      filter(!(is.infinite(obs) | is.nan(obs) | is.na(obs))) %>%
+      pull(obs)
+    sample2vec <- getLNormDraws(sample2Name, draws, spec, masterDf = NULL, mode = "read") %>%
+      filter(!(is.infinite(obs) | is.nan(obs) | is.na(obs))) %>%
+      pull(obs)
+
+    results <- ad.test(sample1vec, sample2vec)
+    rval <- results$ad[1,] %>% # Results from continuous population
+      broom::tidy() %>%
+      tidyr::pivot_wider(names_from = names, values_from = x) %>%
+      rename(asympt.p.value = ` asympt. P-value`) %>%
+      cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                       outcomeVar = "obs",
+                       draws = draws,
+                       spec = spec,
+                       sample1Name = sample1Name,
+                       sample1N = results$ns[1],
+                       sample2Name = sample2Name,
+                       sample2N = results$ns[2]
+                       )) %>%
+      mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
+                             TRUE ~ "nonsig"))
+  }
+  return(rval)
 }
 
 
