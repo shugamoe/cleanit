@@ -11,7 +11,7 @@
 
 
 
-<title>Loose Joined Data Drilldown</title>
+<title>Compare Distributions</title>
 
 <script src="site_libs/header-attrs-2.2/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -26,6 +26,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -391,7 +392,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Loose Joined Data Drilldown</h1>
+<h1 class="title toc-ignore">Compare Distributions</h1>
 
 </div>
 
@@ -551,7 +552,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/looseJoinDrilldown.Rmd</code>) and HTML (<code>docs/looseJoinDrilldown.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/compare_distributions.Rmd</code>) and HTML (<code>docs/compare_distributions.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -577,291 +578,19 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/1c6295e22ec31c2d87a4a2409a25c1cab7a6e42f/docs/looseJoinDrilldown.html" target="_blank">1c6295e</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-06-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/c6e0ce507bdb71ccff0e8129093028a5094b680a/docs/looseJoinDrilldown.html" target="_blank">c6e0ce5</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-06-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/db84f7255e6f0efd988c86049e867205f2dc7e0d/docs/looseJoinDrilldown.html" target="_blank">db84f72</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-06-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/265823dcbc9722343a0169f43925f38f639fe878/docs/looseJoinDrilldown.html" target="_blank">265823d</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-04-27
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/a2bb18058d59a191b6ad2762d012237d4e9a47bd/docs/looseJoinDrilldown.html" target="_blank">a2bb180</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-04-27
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/d4b1c05262f33b83449a2c4df0dc4ee766808c5f/docs/looseJoinDrilldown.html" target="_blank">d4b1c05</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/da6278fddb6e0fef739614ca82f5ce03c6f461e1/docs/looseJoinDrilldown.html" target="_blank">da6278f</a>
-</td>
-<td>
-Julian Chew McClellan
-</td>
-<td>
-2020-03-13
-</td>
-<td>
-add missing docs
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/08686f9ee7cc7a63bf43b868ff305ea8cd88cb88/docs/looseJoinDrilldown.html" target="_blank">08686f9</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-12
-</td>
-<td>
-adding missing docs
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/46192429a08c34ba79cd84d8777a0ef3dbc8e477/docs/looseJoinDrilldown.html" target="_blank">4619242</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-10
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/ff7d96a629d8d15ba858d699a793170d0708f096/docs/looseJoinDrilldown.html" target="_blank">ff7d96a</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/cb514a2b34bfe301009fea906310f9ccfb860ddd/docs/looseJoinDrilldown.html" target="_blank">cb514a2</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/shugamoe/cleanit/blob/13572e2d40fcbf91af0ecbf80cf3cd761fd3f281/analysis/looseJoinDrilldown.Rmd" target="_blank">13572e2</a>
+<a href="https://github.com/shugamoe/cleanit/blob/cc672bd325874b519ff6da9aa23aa5677481db03/analysis/compare_distributions.Rmd" target="_blank">cc672bd</a>
 </td>
 <td>
 Julian McClellan
 </td>
 <td>
-2020-03-09
+2020-07-12
 </td>
 <td>
-wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), verbose = T)
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/686c6e8bca611ecf240a666e87db436cd0d7af3a/docs/looseJoinDrilldown.html" target="_blank">686c6e8</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/7afd48608ec0d9cb2b79defe10f994ffd4995779/analysis/looseJoinDrilldown.Rmd" target="_blank">7afd486</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), verbose = T)
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/c6dd0b95b75b9b427479e1cbd35c778a2d34c4d7/docs/looseJoinDrilldown.html" target="_blank">c6dd0b9</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/shugamoe/cleanit/55137735103297a566a81305d4693204eeaf1d8e/docs/looseJoinDrilldown.html" target="_blank">5513773</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/190671d1bde430e9d1d739d8becfa65ad9faf757/analysis/looseJoinDrilldown.Rmd" target="_blank">190671d</a>
-</td>
-<td>
-Julian McClellan
-</td>
-<td>
-2020-03-09
-</td>
-<td>
-wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), view = T,
+Compare distrubutions page up
 </td>
 </tr>
 </tbody>
@@ -876,100 +605,680 @@ wflow_publish(knitr_in(“analysis/looseJoinDrilldown.Rmd”), view = T,
 <!-- output:  -->
 <!-- html_document: -->
 <!-- toc: true -->
-<div id="multiple-classes-per-semester-in-the-clean-sample-data" class="section level1">
-<h1>Multiple classes per semester in the Clean Sample Data</h1>
-<p>As was discussed in person, it may be possible for the same combination of <code>email</code> and <code>period</code> (semester) to be represented more than once in the Clean Sample data. I.e. someone takes two or more classes that semester that are considered in the Clean Sample data. This could be problematic if one of the classes was in the treatment group and the other was in the control. Both of these clean sample rows will be joined to same row of price beliefs data but in one joined row it will seem the student was in treatment and in the other row it will seem like the student was in the control group, but since they had another class that was in the treatment that same semester, that student, for the semester, should be considered in the treatment group.</p>
-<div id="handling-this" class="section level2">
-<h2>Handling this</h2>
-<p>Before the loosely joined data is created (joining CS to PB on <code>email</code> and <code>period</code>), we create the columns <code>emailPeriodCount</code> and <code>fieldCourseSum</code> in the clean sample data. Thus, after the join, for each row of the loose joined data we can determine if the student <code>email</code> for the given <code>period</code> was actually part of the treatment group, even if that given row might have <code>fieldcourse = 0</code>. We simply check rows for which <code>fieldcourse = 0</code> but have <code>fieldCourseSum &gt;= 1</code>.</p>
-</div>
-<div id="final-effect" class="section level2">
-<h2>Final Effect</h2>
-<p>Thankfully, there are only 33 rows that have incorrectly specified treatment assignment in the loose joined data out of 1439 total rows.</p>
-<p>These rows can now be properly specified with <code>fieldCourseSum</code>.</p>
-</div>
-</div>
-<div id="drilldown-of-the-loose-join-data" class="section level1">
-<h1>Drilldown of the Loose Join Data</h1>
-<p>Of the 1439 observations we have in the final loose joined dataset, let’s investigate how these numbers breakdown in terms of <code>period</code> (<code>fall12</code> or <code>spring13</code>), <code>freshdum.cs</code> (freshman or not), and <code>fieldcourse</code> (<code>1</code> treatment, <code>0</code> control/non-compliant treatment).</p>
-<p><img src="figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plotdrilldown-1">
-Past versions of plotdrilldown-1.png
-</button>
-</p>
-<div id="fig-plotdrilldown-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
+<div id="mean-results" class="section level1">
+<h1>Mean Results</h1>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
-<th>
-Version
+<th style="text-align:right;">
+AD
 </th>
-<th>
-Author
+<th style="text-align:right;">
+T.AD
 </th>
-<th>
-Date
+<th style="text-align:right;">
+asympt.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/da6278fddb6e0fef739614ca82f5ce03c6f461e1/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">da6278f</a>
+<td style="text-align:right;">
+45.8660
 </td>
-<td>
-Julian Chew McClellan
+<td style="text-align:right;">
+58.98400
 </td>
-<td>
-2020-03-13
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Experienced Treated
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+970
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+987
+</td>
+<td style="text-align:left;">
+sig
 </td>
 </tr>
 <tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/46192429a08c34ba79cd84d8777a0ef3dbc8e477/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">4619242</a>
+<td style="text-align:right;">
+34.3870
 </td>
-<td>
-Julian McClellan
+<td style="text-align:right;">
+43.89300
 </td>
-<td>
-2020-03-10
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Experienced Treated
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+974
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+983
+</td>
+<td style="text-align:left;">
+sig
 </td>
 </tr>
 <tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/686c6e8bca611ecf240a666e87db436cd0d7af3a/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">686c6e8</a>
+<td style="text-align:right;">
+6.4805
 </td>
-<td>
-Julian McClellan
+<td style="text-align:right;">
+7.20500
 </td>
-<td>
-2020-03-09
+<td style="text-align:right;">
+0.00053
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+988
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+979
+</td>
+<td style="text-align:left;">
+sig
 </td>
 </tr>
 <tr>
-<td>
-<a href="https://github.com/shugamoe/cleanit/blob/55137735103297a566a81305d4693204eeaf1d8e/docs/figure/looseJoinDrilldown.Rmd/plotdrilldown-1.png" target="_blank">5513773</a>
+<td style="text-align:right;">
+1.7425
 </td>
-<td>
-Julian McClellan
+<td style="text-align:right;">
+0.97613
 </td>
-<td>
-2020-03-09
+<td style="text-align:right;">
+0.12773
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+992
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+983
+</td>
+<td style="text-align:left;">
+nonsig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+81.7280
+</td>
+<td style="text-align:right;">
+106.13000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Inexperienced Treated
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+990
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+26.3320
+</td>
+<td style="text-align:right;">
+33.30300
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Inexperienced Treated
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+46.0780
+</td>
+<td style="text-align:right;">
+59.26100
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10.6000
+</td>
+<td style="text-align:right;">
+12.62100
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
+</td>
+<td style="text-align:left;">
+sig
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
-</div>
-<div id="tracking-price-belief-updates" class="section level1">
-<h1>Tracking Price Belief Updates</h1>
-<p>3/6/2020 we discussed the possibility of tracking “updates” to students’ price beliefs. We posited that from Fall 2012 to Spring 2013, there would be a number of students who start under the control group in Fall 2012, and from there that <code>initial</code> group would split into an <code>afterTreatment</code> and <code>afterControl</code> group come Spring 2013, or disappear entirely.</p>
-<div id="numbers-dont-work-out-for-it" class="section level2">
-<h2>Numbers don’t work out for it</h2>
-<p>Unfortunately of the 579 observations in the loose joined data that were in the control group for Fall 2012 (<code>period == "fall12"</code> and <code>fieldCourseSum == 0</code>), 0 of them become part of the treatment come Spring 2013 (same <code>email</code> for control in Fall 2012, <code>period == "spring13"</code>, and <code>fieldCourseSum &gt;= 1</code>), and 26 remain as part of the control group in Spring 2013 (same <code>email</code>, <code>period == "spring13"</code>, and <code>fieldCourseSum == 0</code>).</p>
+<div id="draws-results" class="section level1">
+<h1>Draws Results</h1>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+asympt.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+draws
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+-1.3134
+</td>
+<td style="text-align:right;">
+1.00000
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Experienced Treated
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+nonsig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+245.4300
+</td>
+<td style="text-align:right;">
+321.0300
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Experienced Treated
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+24400
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+24.4850
+</td>
+<td style="text-align:right;">
+30.8440
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Experienced Control
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+8200
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.6358
+</td>
+<td style="text-align:right;">
+8.7152
+</td>
+<td style="text-align:right;">
+0.00017
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Experienced Control
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+12800
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+118.5000
+</td>
+<td style="text-align:right;">
+154.3500
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Inexperienced Treated
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+8200
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+2000
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72.8290
+</td>
+<td style="text-align:right;">
+94.3470
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Control ~ Inexperienced Treated
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+12800
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+4300
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+106.2500
+</td>
+<td style="text-align:right;">
+138.2300
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+2000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+130.8600
+</td>
+<td style="text-align:right;">
+170.5500
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+obs
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+4300
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+149748
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -997,25 +1306,27 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggplot2_3.3.1     magrittr_1.5      dplyr_1.0.0       purrr_0.3.4      
-[5] workflowr_1.6.2   drake_7.12.2      lubridate_1.7.9   data.table_1.12.8
+ [1] kableExtra_1.1.0  kSamples_1.2-9    SuppDists_1.1-9.5 magrittr_1.5     
+ [5] dplyr_1.0.0       purrr_0.3.4       workflowr_1.6.2   drake_7.12.2     
+ [9] lubridate_1.7.9   data.table_1.12.8
 
 loaded via a namespace (and not attached):
- [1] storr_1.2.1       progress_1.2.2    tidyselect_1.1.0  xfun_0.14        
- [5] colorspace_1.4-1  vctrs_0.3.1       generics_0.0.2    htmltools_0.4.0  
- [9] yaml_2.2.1        rlang_0.4.6       later_1.1.0.1     pillar_1.4.4     
-[13] withr_2.2.0       txtq_0.2.0        glue_1.4.1        lifecycle_0.2.0  
-[17] stringr_1.4.0     munsell_0.5.0     gtable_0.3.0      evaluate_0.14    
-[21] labeling_0.3      knitr_1.28        httpuv_1.5.4      parallel_4.0.1   
-[25] fansi_0.4.1       Rcpp_1.0.4.6      promises_1.1.1    backports_1.1.7  
-[29] scales_1.1.1      filelock_1.0.2    farver_2.0.3      fs_1.4.1         
-[33] hms_0.5.3         packrat_0.5.0     digest_0.6.25     stringi_1.4.6    
-[37] rprojroot_1.3-2   grid_4.0.1        cli_2.0.2         tools_4.0.1      
-[41] base64url_1.4     tibble_3.0.1      crayon_1.3.4      whisker_0.4      
-[45] pkgconfig_2.0.3   ellipsis_0.3.1    prettyunits_1.1.1 assertthat_0.2.1 
-[49] rmarkdown_2.2     R6_2.4.1          igraph_1.2.5      git2r_0.27.1     
-[53] compiler_4.0.1   </code></pre>
-</div>
+ [1] Rcpp_1.0.4.6      txtq_0.2.0        lattice_0.20-41   tidyr_1.1.0      
+ [5] prettyunits_1.1.1 assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25    
+ [9] packrat_0.5.0     R6_2.4.1          backports_1.1.7   evaluate_0.14    
+[13] highr_0.8         httr_1.4.1        pillar_1.4.4      rlang_0.4.6      
+[17] progress_1.2.2    rstudioapi_0.11   whisker_0.4       rmarkdown_2.2    
+[21] webshot_0.5.2     readr_1.3.1       stringr_1.4.0     igraph_1.2.5     
+[25] munsell_0.5.0     broom_0.5.6       compiler_4.0.1    httpuv_1.5.4     
+[29] xfun_0.14         pkgconfig_2.0.3   htmltools_0.4.0   tidyselect_1.1.0 
+[33] tibble_3.0.1      fansi_0.4.1       viridisLite_0.3.0 crayon_1.3.4     
+[37] later_1.1.0.1     grid_4.0.1        nlme_3.1-148      lifecycle_0.2.0  
+[41] git2r_0.27.1      storr_1.2.1       scales_1.1.1      cli_2.0.2        
+[45] stringi_1.4.6     fs_1.4.1          promises_1.1.1    xml2_1.3.2       
+[49] ellipsis_0.3.1    filelock_1.0.2    generics_0.0.2    vctrs_0.3.1      
+[53] tools_4.0.1       glue_1.4.1        hms_0.5.3         parallel_4.0.1   
+[57] yaml_2.2.1        colorspace_1.4-1  base64url_1.4     rvest_0.3.5      
+[61] knitr_1.28       </code></pre>
 </div>
 </div>
 
