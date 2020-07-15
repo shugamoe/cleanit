@@ -39,16 +39,29 @@ specMeanTestVars <- tibble(sample1Name = c("Inexperienced Control",
                                         "Experienced Treated")) %>%
   tidyr::crossing(spec = c(1, 2), vecSize = 1000)
 
+specSigmaTestVars <- specMeanTestVars %>%
+  mutate(outcomeVar = "normsigma_lnorm")
+
 specMeanResults <- specMeanTestVars %>%
+  pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "means")
+specSigmaResults <- specSigmaTestVars %>%
   pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "means")
 ```
 
 # Mean Results
 
+Using the [specifications detailed here](https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit?usp=sharing), I took groups (e.g. Experienced Control vs. Experienced Treated) and sampled with replacement to get both groups to have a size of 1000 and then ran Anderson-Darling tests using the kSamples package using the specified `outcomeVar`.
+
+Sizes of each group are detailed with `sample1N` and `sample2N` respectively, along with the asymptotic p-value, names of the groups compared, (Standardized) Anderson-Darling criterion, `AD` (`T.AD`). Sample sizes are often slightly below 1000 due to invalid values.
+
 ```{r display_mean_comp_results}
 library(kableExtra)
 
-knitr::kable(specMeanResults, "html", digits = 5) %>%
+knitr::kable(specMeanResults, "html", digits = 5, caption = "Lognormual Mu Comparison") %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+
+knitr::kable(specSigmaResults, "html", digits = 5, caption = "Lognormal Sigma Comparison") %>%
   kable_styling(bootstrap_options = "striped",
                 full_width = F)
 ```
@@ -68,6 +81,8 @@ if (!file.exists(drawResultsPath)){
 ```
 
 # Draws Results
+
+Again, using the [specifications detailed here](https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit?usp=sharing), for these draw results, I separated groups and using the `normmu_lnorm` and `normsigma_lnorm` values for each observation within those groups, I simulated 100 draws from a log-normal distribution using those values. Thus, each group of sample size $N$ has $N * 100$ random draws from $N$ different log-normal distributions, with some values invalid values being removed.
 
 ```{r display_draws_comparison}
 knitr::kable(specDrawsResults, "html", digits = 5) %>%
