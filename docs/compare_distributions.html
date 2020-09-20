@@ -417,7 +417,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-07-15
+<strong>Last updated:</strong> 2020-09-20
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -508,16 +508,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree3ce3a151149c58e432a4b61cf40141f600324bb3targetblank3ce3a15a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/3ce3a151149c58e432a4b61cf40141f600324bb3" target="_blank">3ce3a15</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreec88c0a30e12b75d9d29833ef81bbb08327982a27targetblankc88c0a3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/shugamoe/cleanit/tree/c88c0a30e12b75d9d29833ef81bbb08327982a27" target="_blank">c88c0a3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittree3ce3a151149c58e432a4b61cf40141f600324bb3targetblank3ce3a15a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomshugamoecleanittreec88c0a30e12b75d9d29833ef81bbb08327982a27targetblankc88c0a3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/shugamoe/cleanit/tree/3ce3a151149c58e432a4b61cf40141f600324bb3" target="_blank">3ce3a15</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/shugamoe/cleanit/tree/c88c0a30e12b75d9d29833ef81bbb08327982a27" target="_blank">c88c0a3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -532,10 +532,18 @@ Ignored files:
 Untracked files:
     Untracked:  .Rhistory
     Untracked:  .drake/
+    Untracked:  analysis/figure/
     Untracked:  data/cleansample.csv
     Untracked:  data/lnorm_draws/
     Untracked:  data/pricebeliefs.csv
     Untracked:  data/specDrawsResults_100.rds
+    Untracked:  data/specDrawsResults_100_asymptotic.rds
+    Untracked:  data/specMeanResults_mu_asymptotic.rds
+    Untracked:  data/specMeanResults_mu_exact.rds
+    Untracked:  data/specMeanResults_mu_simulated.rds
+    Untracked:  data/specMeanResults_sigma_asymptotic.rds
+    Untracked:  data/specMeanResults_sigma_exact.rds
+    Untracked:  data/specMeanResults_sigma_simulated.rds
     Untracked:  packrat/bundles/
     Untracked:  packrat/src/
 
@@ -576,6 +584,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/shugamoe/cleanit/blob/c88c0a30e12b75d9d29833ef81bbb08327982a27/analysis/compare_distributions.Rmd" target="_blank">c88c0a3</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-09-20
+</td>
+<td>
+adjusted arithmetic ordering of t-tests
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/shugamoe/cleanit/3d62786e448bdf116c7d8b1caa3dee91e0bc31b3/docs/compare_distributions.html" target="_blank">3d62786</a>
+</td>
+<td>
+Julian McClellan
+</td>
+<td>
+2020-07-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -645,7 +687,7 @@ Compare distrubutions page up
 <p>Sizes of each group are detailed with <code>sample1N</code> and <code>sample2N</code> respectively, along with the asymptotic p-value, names of the groups compared, (Standardized) Anderson-Darling criterion, <code>AD</code> (<code>T.AD</code>). Sample sizes are often slightly below 1000 due to invalid values.</p>
 <table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-Lognormual Mu Comparison
+Lognormual Mu Comparison | Asymp. P-value
 </caption>
 <thead>
 <tr>
@@ -687,34 +729,34 @@ sig
 <tbody>
 <tr>
 <td style="text-align:right;">
-45.8660
+34.2250
 </td>
 <td style="text-align:right;">
-58.98400
+43.6800
 </td>
 <td style="text-align:right;">
 0.00000
 </td>
 <td style="text-align:left;">
-Experienced Control ~ Experienced Treated
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
 normmu_lnorm
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-970
 </td>
 <td style="text-align:left;">
 Experienced Treated
 </td>
 <td style="text-align:right;">
-987
+981
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+973
 </td>
 <td style="text-align:left;">
 sig
@@ -722,387 +764,28 @@ sig
 </tr>
 <tr>
 <td style="text-align:right;">
-34.3870
+27.2660
 </td>
 <td style="text-align:right;">
-43.89300
+34.5310
 </td>
 <td style="text-align:right;">
 0.00000
 </td>
 <td style="text-align:left;">
-Experienced Control ~ Experienced Treated
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
 normmu_lnorm
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-974
 </td>
 <td style="text-align:left;">
 Experienced Treated
 </td>
 <td style="text-align:right;">
-983
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6.4805
-</td>
-<td style="text-align:right;">
-7.20500
-</td>
-<td style="text-align:right;">
-0.00053
-</td>
-<td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-988
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-979
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1.7425
-</td>
-<td style="text-align:right;">
-0.97613
-</td>
-<td style="text-align:right;">
-0.12773
-</td>
-<td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-992
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-983
-</td>
-<td style="text-align:left;">
-nonsig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-81.7280
-</td>
-<td style="text-align:right;">
-106.13000
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-990
-</td>
-<td style="text-align:left;">
-Inexperienced Treated
-</td>
-<td style="text-align:right;">
-1000
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-26.3320
-</td>
-<td style="text-align:right;">
-33.30300
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-994
-</td>
-<td style="text-align:left;">
-Inexperienced Treated
-</td>
-<td style="text-align:right;">
-1000
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-46.0780
-</td>
-<td style="text-align:right;">
-59.26100
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:left;">
-Inexperienced Treated ~ Experienced Control
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Inexperienced Treated
-</td>
-<td style="text-align:right;">
-1000
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-978
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-10.6000
-</td>
-<td style="text-align:right;">
-12.62100
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:left;">
-Inexperienced Treated ~ Experienced Control
-</td>
-<td style="text-align:left;">
-normmu_lnorm
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Inexperienced Treated
-</td>
-<td style="text-align:right;">
-1000
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-978
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-</tbody>
-</table>
-<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>
-Lognormal Sigma Comparison
-</caption>
-<thead>
-<tr>
-<th style="text-align:right;">
-AD
-</th>
-<th style="text-align:right;">
-T.AD
-</th>
-<th style="text-align:right;">
-asympt.p.value
-</th>
-<th style="text-align:left;">
-group_compared
-</th>
-<th style="text-align:left;">
-outcomeVar
-</th>
-<th style="text-align:right;">
-spec
-</th>
-<th style="text-align:left;">
-sample1Name
-</th>
-<th style="text-align:right;">
-sample1N
-</th>
-<th style="text-align:left;">
-sample2Name
-</th>
-<th style="text-align:right;">
-sample2N
-</th>
-<th style="text-align:left;">
-sig
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-21.4710
-</td>
-<td style="text-align:right;">
-26.9120
-</td>
-<td style="text-align:right;">
-0.00000
-</td>
-<td style="text-align:left;">
-Experienced Control ~ Experienced Treated
-</td>
-<td style="text-align:left;">
-normsigma_lnorm
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-974
-</td>
-<td style="text-align:left;">
-Experienced Treated
-</td>
-<td style="text-align:right;">
-984
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4.9822
-</td>
-<td style="text-align:right;">
-5.2352
-</td>
-<td style="text-align:right;">
-0.00291
-</td>
-<td style="text-align:left;">
-Experienced Control ~ Experienced Treated
-</td>
-<td style="text-align:left;">
-normsigma_lnorm
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-980
-</td>
-<td style="text-align:left;">
-Experienced Treated
-</td>
-<td style="text-align:right;">
-987
-</td>
-<td style="text-align:left;">
-sig
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9.2623
-</td>
-<td style="text-align:right;">
-10.8620
-</td>
-<td style="text-align:right;">
-0.00003
-</td>
-<td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
-</td>
-<td style="text-align:left;">
-normsigma_lnorm
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-993
+986
 </td>
 <td style="text-align:left;">
 Experienced Control
@@ -1116,31 +799,31 @@ sig
 </tr>
 <tr>
 <td style="text-align:right;">
-6.8724
+15.4250
 </td>
 <td style="text-align:right;">
-7.7202
+18.9640
 </td>
 <td style="text-align:right;">
-0.00035
+0.00000
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
+Experienced Control ~ Inexperienced Control
 </td>
 <td style="text-align:left;">
-normsigma_lnorm
+normmu_lnorm
 </td>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-990
+1
 </td>
 <td style="text-align:left;">
 Experienced Control
+</td>
+<td style="text-align:right;">
+977
+</td>
+<td style="text-align:left;">
+Inexperienced Control
 </td>
 <td style="text-align:right;">
 986
@@ -1151,16 +834,235 @@ sig
 </tr>
 <tr>
 <td style="text-align:right;">
-64.6790
+2.0347
 </td>
 <td style="text-align:right;">
-83.7150
+1.3603
+</td>
+<td style="text-align:right;">
+0.08788
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+980
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+nonsig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+99.3610
+</td>
+<td style="text-align:right;">
+129.3100
 </td>
 <td style="text-align:right;">
 0.00000
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+985
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16.6800
+</td>
+<td style="text-align:right;">
+20.6140
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+50.5860
+</td>
+<td style="text-align:right;">
+65.1880
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+979
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+12.9420
+</td>
+<td style="text-align:right;">
+15.6990
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Lognormal Sigma Comparison | Asymp. P-value
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+asympt.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+19.0030
+</td>
+<td style="text-align:right;">
+23.6680
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
 normsigma_lnorm
@@ -1169,16 +1071,16 @@ normsigma_lnorm
 1
 </td>
 <td style="text-align:left;">
-Inexperienced Control
+Experienced Treated
 </td>
 <td style="text-align:right;">
-993
+983
 </td>
 <td style="text-align:left;">
-Inexperienced Treated
+Experienced Control
 </td>
 <td style="text-align:right;">
-1000
+981
 </td>
 <td style="text-align:left;">
 sig
@@ -1186,16 +1088,16 @@ sig
 </tr>
 <tr>
 <td style="text-align:right;">
-13.3480
+2.9448
 </td>
 <td style="text-align:right;">
-16.2330
+2.5568
 </td>
 <td style="text-align:right;">
-0.00000
+0.02925
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
 normsigma_lnorm
@@ -1204,10 +1106,109 @@ normsigma_lnorm
 2
 </td>
 <td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+986
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8.4778
+</td>
+<td style="text-align:right;">
+9.8308
+</td>
+<td style="text-align:right;">
+0.00006
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:left;">
 Inexperienced Control
 </td>
 <td style="text-align:right;">
-995
+990
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.9230
+</td>
+<td style="text-align:right;">
+9.1013
+</td>
+<td style="text-align:right;">
+0.00012
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+981
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+986
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+66.9830
+</td>
+<td style="text-align:right;">
+86.7440
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
 </td>
 <td style="text-align:left;">
 Inexperienced Treated
@@ -1216,15 +1217,56 @@ Inexperienced Treated
 1000
 </td>
 <td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+990
+</td>
+<td style="text-align:left;">
 sig
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-77.9850
+11.5510
 </td>
 <td style="text-align:right;">
-101.2100
+13.8710
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+997
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+72.2590
+</td>
+<td style="text-align:right;">
+93.6810
 </td>
 <td style="text-align:right;">
 0.00000
@@ -1256,13 +1298,661 @@ sig
 </tr>
 <tr>
 <td style="text-align:right;">
-11.7180
+12.8430
 </td>
 <td style="text-align:right;">
-14.0900
+15.5700
 </td>
 <td style="text-align:right;">
 0.00000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+979
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Lognormual Mu Comparison | Simulated P-value
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+simulated.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+50.7600
+</td>
+<td style="text-align:right;">
+65.4180
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+988
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+980
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+25.5840
+</td>
+<td style="text-align:right;">
+32.3200
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+981
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+981
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+13.1500
+</td>
+<td style="text-align:right;">
+15.9730
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+979
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+988
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2.6155
+</td>
+<td style="text-align:right;">
+2.1239
+</td>
+<td style="text-align:right;">
+0.0415
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+980
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+997
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+83.8570
+</td>
+<td style="text-align:right;">
+108.9300
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+988
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+36.8440
+</td>
+<td style="text-align:right;">
+47.1220
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+56.2550
+</td>
+<td style="text-align:right;">
+72.6420
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+983
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+20.4720
+</td>
+<td style="text-align:right;">
+25.5990
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Lognormal Sigma Comparison | Simulated P-value
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+simulated.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+21.3060
+</td>
+<td style="text-align:right;">
+26.6960
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+980
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+971
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.6219
+</td>
+<td style="text-align:right;">
+4.7616
+</td>
+<td style="text-align:right;">
+0.0038
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+982
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9.1840
+</td>
+<td style="text-align:right;">
+10.7590
+</td>
+<td style="text-align:right;">
+0.0001
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+976
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+985
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3.5138
+</td>
+<td style="text-align:right;">
+3.3049
+</td>
+<td style="text-align:right;">
+0.0152
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+972
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+993
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+45.0140
+</td>
+<td style="text-align:right;">
+57.8630
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+993
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16.6930
+</td>
+<td style="text-align:right;">
+20.6310
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+990
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+69.9880
+</td>
+<td style="text-align:right;">
+90.6960
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+973
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+15.5960
+</td>
+<td style="text-align:right;">
+19.1890
+</td>
+<td style="text-align:right;">
+0.0000
 </td>
 <td style="text-align:left;">
 Inexperienced Treated ~ Experienced Control
@@ -1284,6 +1974,654 @@ Experienced Control
 </td>
 <td style="text-align:right;">
 981
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Lognormual Mu Comparison | Exact P-value
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+exact.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+47.2180
+</td>
+<td style="text-align:right;">
+60.7610
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+982
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+30.6420
+</td>
+<td style="text-align:right;">
+38.9690
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+981
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+984
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7.1572
+</td>
+<td style="text-align:right;">
+8.0947
+</td>
+<td style="text-align:right;">
+0.0001
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+974
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+987
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2.5503
+</td>
+<td style="text-align:right;">
+2.0381
+</td>
+<td style="text-align:right;">
+0.0466
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+986
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+989
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+117.5000
+</td>
+<td style="text-align:right;">
+153.1600
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+985
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+23.8730
+</td>
+<td style="text-align:right;">
+30.0700
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+54.1310
+</td>
+<td style="text-align:right;">
+69.8490
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+971
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+24.3730
+</td>
+<td style="text-align:right;">
+30.7270
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normmu_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+981
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Lognormal Sigma Comparison | Exact P-value
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+AD
+</th>
+<th style="text-align:right;">
+T.AD
+</th>
+<th style="text-align:right;">
+exact.p.value
+</th>
+<th style="text-align:left;">
+group_compared
+</th>
+<th style="text-align:left;">
+outcomeVar
+</th>
+<th style="text-align:right;">
+spec
+</th>
+<th style="text-align:left;">
+sample1Name
+</th>
+<th style="text-align:right;">
+sample1N
+</th>
+<th style="text-align:left;">
+sample2Name
+</th>
+<th style="text-align:right;">
+sample2N
+</th>
+<th style="text-align:left;">
+sig
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+16.9880
+</td>
+<td style="text-align:right;">
+21.0180
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+985
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+976
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9.9805
+</td>
+<td style="text-align:right;">
+11.8060
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Experienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Treated
+</td>
+<td style="text-align:right;">
+982
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+986
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5.0820
+</td>
+<td style="text-align:right;">
+5.3665
+</td>
+<td style="text-align:right;">
+0.0027
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+982
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+995
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2.8063
+</td>
+<td style="text-align:right;">
+2.3746
+</td>
+<td style="text-align:right;">
+0.0349
+</td>
+<td style="text-align:left;">
+Experienced Control ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+994
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+62.4280
+</td>
+<td style="text-align:right;">
+80.7560
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+987
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+13.6220
+</td>
+<td style="text-align:right;">
+16.5930
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Inexperienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+992
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+60.9600
+</td>
+<td style="text-align:right;">
+78.8270
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+974
+</td>
+<td style="text-align:left;">
+sig
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+17.2630
+</td>
+<td style="text-align:right;">
+21.3800
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Inexperienced Treated ~ Experienced Control
+</td>
+<td style="text-align:left;">
+normsigma_lnorm
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Inexperienced Treated
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+978
 </td>
 <td style="text-align:left;">
 sig
@@ -1314,9 +2652,6 @@ group_compared
 outcomeVar
 </th>
 <th style="text-align:right;">
-draws
-</th>
-<th style="text-align:right;">
 spec
 </th>
 <th style="text-align:left;">
@@ -1334,6 +2669,9 @@ sample2N
 <th style="text-align:left;">
 sig
 </th>
+<th style="text-align:left;">
+method
+</th>
 </tr>
 </thead>
 <tbody>
@@ -1348,22 +2686,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Experienced Control ~ Experienced Treated
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-28143
 </td>
 <td style="text-align:left;">
 Experienced Treated
@@ -1372,7 +2701,16 @@ Experienced Treated
 24400
 </td>
 <td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+28143
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1386,22 +2724,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Experienced Control ~ Experienced Treated
+Experienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:left;">
-Experienced Control
-</td>
-<td style="text-align:right;">
-45487
 </td>
 <td style="text-align:left;">
 Experienced Treated
@@ -1410,7 +2739,16 @@ Experienced Treated
 24400
 </td>
 <td style="text-align:left;">
+Experienced Control
+</td>
+<td style="text-align:right;">
+45487
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1424,22 +2762,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
+Experienced Control ~ Inexperienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-8200
 </td>
 <td style="text-align:left;">
 Experienced Control
@@ -1448,7 +2777,16 @@ Experienced Control
 28143
 </td>
 <td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+8200
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1462,22 +2800,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Experienced Control
+Experienced Control ~ Inexperienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-12800
 </td>
 <td style="text-align:left;">
 Experienced Control
@@ -1486,7 +2815,16 @@ Experienced Control
 45487
 </td>
 <td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+12800
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1500,22 +2838,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
+Inexperienced Treated ~ Inexperienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-8200
 </td>
 <td style="text-align:left;">
 Inexperienced Treated
@@ -1524,7 +2853,16 @@ Inexperienced Treated
 2000
 </td>
 <td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+8200
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1538,22 +2876,13 @@ sig
 0
 </td>
 <td style="text-align:left;">
-Inexperienced Control ~ Inexperienced Treated
+Inexperienced Treated ~ Inexperienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 2
-</td>
-<td style="text-align:left;">
-Inexperienced Control
-</td>
-<td style="text-align:right;">
-12800
 </td>
 <td style="text-align:left;">
 Inexperienced Treated
@@ -1562,7 +2891,16 @@ Inexperienced Treated
 4300
 </td>
 <td style="text-align:left;">
+Inexperienced Control
+</td>
+<td style="text-align:right;">
+12800
+</td>
+<td style="text-align:left;">
 sig
+</td>
+<td style="text-align:left;">
+asymptotic
 </td>
 </tr>
 <tr>
@@ -1579,10 +2917,7 @@ sig
 Inexperienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 1
@@ -1602,6 +2937,9 @@ Experienced Control
 <td style="text-align:left;">
 sig
 </td>
+<td style="text-align:left;">
+asymptotic
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -1617,10 +2955,7 @@ sig
 Inexperienced Treated ~ Experienced Control
 </td>
 <td style="text-align:left;">
-obs
-</td>
-<td style="text-align:right;">
-100
+normmu_lnorm
 </td>
 <td style="text-align:right;">
 2
@@ -1640,6 +2975,9 @@ Experienced Control
 <td style="text-align:left;">
 sig
 </td>
+<td style="text-align:left;">
+asymptotic
+</td>
 </tr>
 </tbody>
 </table>
@@ -1650,12 +2988,12 @@ sig
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre><code>R version 4.0.1 (2020-06-06)
+<pre><code>R version 4.0.2 (2020-06-22)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Manjaro Linux
 
 Matrix products: default
-BLAS:   /usr/lib/libopenblasp-r0.3.9.so
+BLAS:   /usr/lib/libopenblasp-r0.3.10.so
 LAPACK: /usr/lib/liblapack.so.3.9.0
 
 locale:
@@ -1670,26 +3008,25 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] kableExtra_1.1.0  kSamples_1.2-9    SuppDists_1.1-9.5 magrittr_1.5     
+ [1] kableExtra_1.1.0  glue_1.4.1        stringr_1.4.0     magrittr_1.5     
  [5] dplyr_1.0.0       purrr_0.3.4       workflowr_1.6.2   drake_7.12.2     
  [9] lubridate_1.7.9   data.table_1.12.8
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.4.6      txtq_0.2.0        lattice_0.20-41   tidyr_1.1.0      
- [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25     packrat_0.5.0    
- [9] R6_2.4.1          backports_1.1.7   evaluate_0.14     httr_1.4.1       
-[13] highr_0.8         pillar_1.4.4      rlang_0.4.6       rstudioapi_0.11  
-[17] whisker_0.4       rmarkdown_2.2     webshot_0.5.2     readr_1.3.1      
-[21] stringr_1.4.0     igraph_1.2.5      munsell_0.5.0     broom_0.5.6      
-[25] compiler_4.0.1    httpuv_1.5.4      xfun_0.14         pkgconfig_2.0.3  
-[29] htmltools_0.4.0   tidyselect_1.1.0  tibble_3.0.1      fansi_0.4.1      
-[33] viridisLite_0.3.0 crayon_1.3.4      later_1.1.0.1     grid_4.0.1       
-[37] nlme_3.1-148      lifecycle_0.2.0   git2r_0.27.1      storr_1.2.1      
-[41] scales_1.1.1      cli_2.0.2         stringi_1.4.6     fs_1.4.1         
-[45] promises_1.1.1    xml2_1.3.2        ellipsis_0.3.1    filelock_1.0.2   
-[49] generics_0.0.2    vctrs_0.3.1       tools_4.0.1       glue_1.4.1       
-[53] hms_0.5.3         parallel_4.0.1    yaml_2.2.1        colorspace_1.4-1 
-[57] base64url_1.4     rvest_0.3.5       knitr_1.28       </code></pre>
+ [1] storr_1.2.1       tidyselect_1.1.0  xfun_0.14         colorspace_1.4-1 
+ [5] vctrs_0.3.1       generics_0.0.2    viridisLite_0.3.0 htmltools_0.4.0  
+ [9] yaml_2.2.1        rlang_0.4.6       later_1.1.0.1     pillar_1.4.4     
+[13] txtq_0.2.0        lifecycle_0.2.0   munsell_0.5.0     rvest_0.3.5      
+[17] evaluate_0.14     knitr_1.28        httpuv_1.5.4      parallel_4.0.2   
+[21] fansi_0.4.1       highr_0.8         Rcpp_1.0.4.6      readr_1.3.1      
+[25] promises_1.1.1    backports_1.1.7   scales_1.1.1      filelock_1.0.2   
+[29] webshot_0.5.2     fs_1.4.1          hms_0.5.3         packrat_0.5.0    
+[33] digest_0.6.25     stringi_1.4.6     rprojroot_1.3-2   cli_2.0.2        
+[37] tools_4.0.2       base64url_1.4     tibble_3.0.1      crayon_1.3.4     
+[41] whisker_0.4       tidyr_1.1.0       pkgconfig_2.0.3   ellipsis_0.3.1   
+[45] xml2_1.3.2        assertthat_0.2.1  rmarkdown_2.2     httr_1.4.1       
+[49] rstudioapi_0.11   R6_2.4.1          igraph_1.2.5      git2r_0.27.1     
+[53] compiler_4.0.2   </code></pre>
 </div>
 </div>
 
