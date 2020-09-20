@@ -37,15 +37,44 @@ specMeanTestVars <- tibble(sample1Name = c("Inexperienced Control",
                                         "Inexperienced Treated",
                                         "Experienced Control",
                                         "Experienced Treated")) %>%
-  tidyr::crossing(spec = c(1, 2), vecSize = 1000)
+  tidyr::crossing(spec = c(1, 2), vecSize = 1000) %>%
+  orderParams(has_index=F, name_prefix="sample")
 
 specSigmaTestVars <- specMeanTestVars %>%
   mutate(outcomeVar = "normsigma_lnorm")
 
-specMeanResults <- specMeanTestVars %>%
-  pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "means")
-specSigmaResults <- specSigmaTestVars %>%
-  pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "means")
+methodVars <- tidyr::crossing(outcomeVar = c("mu", "sigma"),
+                              method = c("asymptotic", "simulated", "exact"))
+
+getOrCalcMeanResults <- function(outcomeVar, method){
+  require(glue)
+  require(stringr)
+  resultsPath <- glue("data/specMeanResults_{outcomeVar}_{method}.rds")
+  
+  if (!file.exists(resultsPath)){
+     
+    res <- switch(outcomeVar, "mu" = specMeanTestVars,
+                  "sigma" = specSigmaTestVars) %>%
+      pmap_dfr(.f = compareDistributions, masterDf=specBothFull, method=method,draws=draws, mode="means")
+    saveRDS(res, resultsPath)
+  } else {
+    res <- readRDS(resultsPath)
+  }
+  
+  res
+}
+
+# Asymp. p-vals
+specMeanResults <- getOrCalcMeanResults("mu", "asymptotic")
+specSigmaResults <- getOrCalcMeanResults("sigma", "asymptotic")
+
+# Simulated
+specMeanResultsSim <- getOrCalcMeanResults("mu", "simulated")
+specSigmaResultsSim <- getOrCalcMeanResults("sigma", "simulated")
+
+# Exact
+specMeanResultsExact <- getOrCalcMeanResults("mu", "exact")
+specSigmaResultsExact <- getOrCalcMeanResults("sigma", "exact") 
 ```
 
 # Mean Results
@@ -57,27 +86,56 @@ Sizes of each group are detailed with `sample1N` and `sample2N` respectively, al
 ```{r display_mean_comp_results}
 library(kableExtra)
 
-knitr::kable(specMeanResults, "html", digits = 5, caption = "Lognormual Mu Comparison") %>%
+# Asym
+knitr::kable(specMeanResults, "html", digits = 5, caption = "Lognormual Mu Comparison | Asymp. P-value") %>%
   kable_styling(bootstrap_options = "striped",
                 full_width = F)
 
-knitr::kable(specSigmaResults, "html", digits = 5, caption = "Lognormal Sigma Comparison") %>%
+knitr::kable(specSigmaResults, "html", digits = 5, caption = "Lognormal Sigma Comparison | Asymp. P-value") %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+
+# Simulated
+knitr::kable(specMeanResultsSim, "html", digits = 5, caption = "Lognormual Mu Comparison | Simulated P-value") %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+
+knitr::kable(specSigmaResultsSim, "html", digits = 5, caption = "Lognormal Sigma Comparison | Simulated P-value") %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+
+# Exact
+knitr::kable(specMeanResultsExact, "html", digits = 5, caption = "Lognormual Mu Comparison | Exact P-value") %>%
+  kable_styling(bootstrap_options = "striped",
+                full_width = F)
+
+knitr::kable(specSigmaResultsExact, "html", digits = 5, caption = "Lognormal Sigma Comparison | Exact P-value") %>%
   kable_styling(bootstrap_options = "striped",
                 full_width = F)
 ```
 
 ```{r calc_draws_comparison}
-specDrawsTestVars <- specMeanTestVars %>%
-  tidyr::crossing(draws = c(100)) #, 1000, 10000)) # Jesus this takes so long
+specDrawsTestVars <- specMeanTestVars
 
-drawResultsPath <- "data/specDrawsResults_100.rds"
-if (!file.exists(drawResultsPath)){
-  specDrawsResults <- specDrawsTestVars %>%
-    pmap_dfr(.f = compareDistributions, masterDf = specBothFull, mode = "draws")
-  saveRDS(specDrawsResults, drawResultsPath)
-} else {
-  specDrawsResults <- readRDS(drawResultsPath)
+
+getOrCalcDrawResults <- function(draws, method){
+  require(glue)
+  drawResultsPath <- glue("data/specDrawsResults_{draws}_{method}.rds")
+  
+  if (!file.exists(drawResultsPath)){
+    res <- specDrawsTestVars %>%
+      pmap_dfr(.f = compareDistributions, method=method, masterDf=specBothFull, mode="draws") %>%
+      mutate(method = !!method)
+    saveRDS(res, drawResultsPath)
+  } else {
+    res <- readRDS(drawResultsPath)
+  }
+  
+  res
 }
+
+specDrawsTestResults <- tidyr::crossing(draws = c(100), method=c("asymptotic")) %>% # , "simulated")) %>% # , "exact")) %>%
+  pmap_dfr(.f = getOrCalcDrawResults)
 ```
 
 # Draws Results
@@ -85,7 +143,22 @@ if (!file.exists(drawResultsPath)){
 Again, using the [specifications detailed here](https://docs.google.com/spreadsheets/d/1JS-5_iv-WrfzifFsr_1CW5a12G5DfMAGYSs6r4ACfxs/edit?usp=sharing), for these draw results, I separated groups and using the `normmu_lnorm` and `normsigma_lnorm` values for each observation within those groups, I simulated 100 draws from a log-normal distribution using those values. Thus, each group of sample size $N$ has $N * 100$ random draws from $N$ different log-normal distributions, with some values invalid values being removed.
 
 ```{r display_draws_comparison}
-knitr::kable(specDrawsResults, "html", digits = 5) %>%
+displayRes <- function(table){
+  require(knitr)
+  require(dplyr)
+  require(kableExtra)
+  kable(table, "html", digits=5) %>%
+    kable_styling(bootstrap_options="striped",
+                  full_width=F) 
+}
+
+knitr::kable(specDrawsTestResults %>% filter(method=="asymptotic"), "html", digits = 5) %>%
   kable_styling(bootstrap_options = "striped",
                 full_width = F)
+# knitr::kable(specDrawsTestResults %>% filter(method="exact"), "html", digits = 5) %>%
+#   kable_styling(bootstrap_options = "striped",
+#                 full_width = F)
+# knitr::kable(specDrawsTestResults %>% filter(method="simulated"), "html", digits = 5) %>%
+#   kable_styling(bootstrap_options = "striped",
+#                 full_width = F)
 ```

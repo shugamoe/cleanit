@@ -476,6 +476,7 @@ getTTestGroup <- function(freshVal, treatVal, season, nonComply = T){
 
 calc2STTest <- function(sample1Index, sample2Index, index1Name, index2Name, groupList, outcomeVar, conf = .95){
   require(dplyr)
+  require(stringr)
   sample1 <- groupList[[sample1Index]][[outcomeVar]]
   sample2 <- groupList[[sample2Index]][[outcomeVar]]
 
@@ -620,7 +621,7 @@ calcAndCacheAllDraws <- function(masterDf){
 }
 
 compareDistributions <- function(sample1Name, sample2Name, masterDf, mode,
-                                 spec, vecSize = 1000, draws = 100, outcomeVar = "normmu_lnorm",
+                                 spec, method="asymptotic", vecSize = 1000, draws = 100, outcomeVar = "normmu_lnorm",
                                  conf = .95, startSeed = 26){
   require(dplyr)
   require(kSamples)
@@ -636,23 +637,41 @@ compareDistributions <- function(sample1Name, sample2Name, masterDf, mode,
       pull(outcomeVar) %>%
       sample(size = vecSize, replace = T)
 
-    results <- ad.test(sample1vec, sample2vec)
+    results <- ad.test(sample1vec, sample2vec, method=method)
     rval <- results$ad[1,] %>% # Results from continuous population
       broom::tidy() %>%
-      tidyr::pivot_wider(names_from = names, values_from = x) %>%
-      rename(asympt.p.value = ` asympt. P-value`) %>%
-      cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
-                       outcomeVar = outcomeVar,
-                       spec = spec,
-                       sample1Name = sample1Name,
-                       sample1N = results$ns[1],
-                       sample2Name = sample2Name,
-                       sample2N = results$ns[2]
-                       )) %>%
-      mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
-                             TRUE ~ "nonsig"))
+      tidyr::pivot_wider(names_from = names, values_from = x)
+    if (method == "asymptotic"){
+      rval <- rval %>%
+        rename(asympt.p.value = ` asympt. P-value`) %>%
+        cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                         outcomeVar = outcomeVar,
+                         spec = spec,
+                         sample1Name = sample1Name,
+                         sample1N = results$ns[1],
+                         sample2Name = sample2Name,
+                         sample2N = results$ns[2]
+                         )) %>%
+        mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
+                               TRUE ~ "nonsig"))
+    } else { # If calculating pvalue using exact or simulated method
+      pname <- glue::glue("{method}.p.value")
+      rval <- rval %>%
+        rename(!!pname := ` sim. P-value`) %>%
+        select(-` asympt. P-value`) %>%
+        cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                         outcomeVar = outcomeVar,
+                         spec = spec,
+                         sample1Name = sample1Name,
+                         sample1N = results$ns[1],
+                         sample2Name = sample2Name,
+                         sample2N = results$ns[2]
+                         )) %>%
+        mutate(sig = case_when(.data[[pname]] < 1 - conf ~ "sig",
+                               TRUE ~ "nonsig"))
+    }
   } else if (mode == "draws") {
-    message(glue::glue("Comparing {sample1Name} ~ {sample2Name} | {draws} draws . . ."))
+    message(glue::glue("Comparing {sample1Name} ~ {sample2Name} | {draws} draws | {method} p-value |. . ."))
 
     sample1vec <- getLNormDraws(sample1Name, draws, spec, masterDf = NULL, mode = "read") %>%
       filter(!(is.infinite(obs) | is.nan(obs) | is.na(obs))) %>%
@@ -661,24 +680,106 @@ compareDistributions <- function(sample1Name, sample2Name, masterDf, mode,
       filter(!(is.infinite(obs) | is.nan(obs) | is.na(obs))) %>%
       pull(obs)
 
-    results <- ad.test(sample1vec, sample2vec)
+    results <- ad.test(sample1vec, sample2vec, method=method)
+
     rval <- results$ad[1,] %>% # Results from continuous population
       broom::tidy() %>%
-      tidyr::pivot_wider(names_from = names, values_from = x) %>%
-      rename(asympt.p.value = ` asympt. P-value`) %>%
-      cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
-                       outcomeVar = "obs",
-                       draws = draws,
-                       spec = spec,
-                       sample1Name = sample1Name,
-                       sample1N = results$ns[1],
-                       sample2Name = sample2Name,
-                       sample2N = results$ns[2]
-                       )) %>%
-      mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
-                             TRUE ~ "nonsig"))
-  }
+      tidyr::pivot_wider(names_from = names, values_from = x)
+    if (method == "asymptotic"){
+      # print(rval)
+      rval <- rval %>%
+        rename(asympt.p.value = ` asympt. P-value`) %>%
+        cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                         outcomeVar = outcomeVar,
+                         spec = spec,
+                         sample1Name = sample1Name,
+                         sample1N = results$ns[1],
+                         sample2Name = sample2Name,
+                         sample2N = results$ns[2]
+                         )) %>%
+        mutate(sig = case_when(asympt.p.value < 1 - conf ~ "sig",
+                               TRUE ~ "nonsig"))
+    } else { # If calculating pvalue using exact or simulated method
+      pname <- glue::glue("{method}.p.value")
+      rval <- rval %>%
+        rename(!!pname := ` sim. P-value`) %>%
+        select(-` asympt. P-value`) %>%
+        cbind(data.frame(group_compared = glue::glue("{sample1Name} ~ {sample2Name}"),
+                         outcomeVar = outcomeVar,
+                         spec = spec,
+                         sample1Name = sample1Name,
+                         sample1N = results$ns[1],
+                         sample2Name = sample2Name,
+                         sample2N = results$ns[2]
+                         )) %>%
+        mutate(sig = case_when(.data[[pname]] < 1 - conf ~ "sig",
+                               TRUE ~ "nonsig"))
+    }
   return(rval)
+  }
+}
+
+# Function for flipping the estimated t-test value and rearranging names
+# e.g. want treated - controlled and experienced - inexperienced
+orderParams <- function(paramsTable, has_index=T, name_prefix="index"){
+  require(stringr)
+  require(dplyr)
+
+  name1 <- glue::glue("{name_prefix}1Name")
+  name2 <- glue::glue("{name_prefix}2Name")
+
+  paramsTable <- paramsTable %>%
+    mutate(
+           bakindex1Name = .data[[name1]],
+           bakindex2Name = .data[[name2]],
+           )
+
+  if (!has_index){
+    paramsTable <- paramsTable %>%
+    mutate(baksample1Index = case_when(T ~ T),
+           baksample2Index = case_when(T ~ T)
+           )
+  } else {
+    paramsTable <- paramsTable %>%
+      mutate(baksample1Index = case_when(T ~ sample1Index),
+           baksample2Index = case_when(T ~ sample2Index)
+           )
+  }
+
+  paramsTable <- paramsTable %>%
+    # populate baksample<n>Index with junk if no index to go off of.
+    mutate(treat_flipped = str_detect(bakindex2Name, "Treated") &
+                                    str_detect(bakindex1Name, "Control"),
+           treat_ok = str_detect(bakindex2Name, "Control") &
+                                str_detect(bakindex1Name, "Treated"),
+           exper_flipped = str_detect(bakindex2Name, "Experienced") &
+                                    str_detect(bakindex1Name, "Inexperienced")) %>%
+    mutate(
+           # T/F if treatment is flipped the way we don't want it. Ideally we would like
+           # Treated - Controlled
+           !!name1 := case_when(treat_flipped ~ bakindex2Name,
+                                  exper_flipped & !treat_ok ~ bakindex2Name,
+                                  T ~ bakindex1Name),
+           !!name2 := case_when(treat_flipped ~ bakindex1Name,
+                                  exper_flipped & !treat_ok ~ bakindex1Name,
+                                  T ~ bakindex2Name),
+           sample1Index = case_when(treat_flipped ~ baksample2Index,
+                                    exper_flipped & !treat_ok ~ baksample2Index,
+                                    T ~ baksample1Index),
+           sample2Index = case_when(treat_flipped ~ baksample1Index,
+                                    exper_flipped & !treat_ok ~ baksample1Index,
+                                    T ~ baksample2Index)
+    # )
+    ) %>%
+    select(-starts_with("bak")) %>%
+    select(-treat_flipped, -exper_flipped, -treat_ok)
+
+  if (!has_index){
+    paramsTable <- paramsTable %>%
+      select(-contains("Index"))
+  }
+
+  paramsTable
 }
 
 

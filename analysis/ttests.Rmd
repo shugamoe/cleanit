@@ -44,10 +44,14 @@ indexKey <- data.table(sample1Index = 1:8,
                                        "Experienced Treated",
                                        "Inexperienced Treated",
                                        # Fall12 + Spring 13 
-                                       "nonfreshControlAll",
-                                       "freshControlAll",
-                                       "nonfreshTreatAll",
-                                       "freshTreatAll"))
+                                       "Experienced Control All",
+                                       "Inexperienced Control All",
+                                       "Experienced Treated All",
+                                       "Inexperienced Treated All"))
+                                       # "nonfreshControlAll",
+                                       # "freshControlAll",
+                                       # "nonfreshTreatAll",
+                                       # "freshTreatAll"))
 
 # Please observe an abominable combination of dplyr and data.table
 
@@ -59,7 +63,8 @@ fallParams <- list(sample1Index = 1:4,
   as.data.table() %>%
   merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
   merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
-  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum")) %>%
+  orderParams()
 
 # Onlinechkdum only, only 3 out of 6 groups (from 5/15/2020 meeting)
 # Manually make this to do what Uyen wants
@@ -75,7 +80,8 @@ fallParamsChkDumOnly <- tibble(
   ) %>%
   merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
   merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
-  arrange(sample1Index)
+  arrange(sample1Index) %>%
+  orderParams()
 
 
 
@@ -86,7 +92,8 @@ allParams <- list(sample1Index = 5:8,
   as.data.table() %>%
   merge(indexKey[,.(sample1Index, index1Name = indexName)], by = c("sample1Index")) %>%
   merge(indexKey[,.(sample2Index, index2Name = indexName)], by = c("sample2Index")) %>%
-  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum"))
+  tidyr::crossing(outcomeVar = c("onlinechkdum", "purchased", "onlinechoicedum")) %>%
+  orderParams()
 
 # Leave non-compliant treatment group in the control group (treatment == 0 and offered == 1)
 fallTTestResults <- fallParams %>%
@@ -109,6 +116,13 @@ fallTTestResultsDiscardNCT <- fallParams %>%
 
 allTTestResultsDiscardNCT <- allParams %>%
   purrr::pmap_df(.f = calc2STTest, groupList = groupListDiscardNCT)
+
+# .95
+fallTTestResultsChkDumOnlyDiscardNCT <- fallParamsChkDumOnly %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupListDiscardNCT)
+# .90 Conf
+fallTTestResultsChkDumOnly90DiscardNCT <- fallParamsChkDumOnly %>%
+  purrr::pmap_df(.f = calc2STTest, groupList = groupListDiscardNCT, conf = .90)
 ```
 
 ## 2-Sample T-Tests
@@ -206,6 +220,39 @@ library(ggplot2)
 )
 ```
 
+#### Discard NCT
+
+```{r graphs_for_paper_discardnct}
+(ggplot(fallTTestResultsChkDumOnlyDiscardNCT, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "95% CI | Assume unequal variance",
+       fill = "Significance", y = "Estimated Difference (Assumed 0)", x = "Group Compared") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+(ggplot(fallTTestResultsChkDumOnly90DiscardNCT, aes(x=group_compared, y=estimate)) +
+  geom_bar(stat="identity", aes(fill = sig)) +
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high),
+                width=.2,                    # Width of the error bars
+                ) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(title = "Welch 2-Sample T-Test Results | Fall12 Only", subtitle = "90% CI | Assume unequal variance",
+       fill = "Significance", y = "Estimated Difference (Assumed 0)", x = "Group Compared") +
+  facet_wrap(. ~ outcomeVar) +
+  theme_minimal() +
+  coord_flip() +
+  scale_fill_manual(values = c("sig" = "tomato", "nonsig" = "grey")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+)
+```
+
 ## Means tests
 
 ```{r get_means_tests_params_and_results}
@@ -257,7 +304,8 @@ specTestVars <- tibble(sample1Name = c("Inexperienced Control",
                         sample2Name = c("Inexperienced Treated",
                                         "Experienced Control",
                                         "Experienced Treated")) %>%
-  mutate(outcomeVar = "normmu")
+  mutate(outcomeVar = "normmu") %>%
+  orderParams(has_index=F, name_prefix="sample")
 
 spec1Results <- specTestVars %>%
   pmap_dfr(.f = calcSpec2STTest, masterDf = spec1Full)
